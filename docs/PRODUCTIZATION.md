@@ -272,11 +272,13 @@ The release is blocked unless:
 
 The owner has confirmed the Samsarix brand, Samsarix LLC company identity, and the `contact@samsarix.com` / `support@samsarix.com` contact channels. The repository now uses unmodified MPL-2.0, identifies Samsarix LLC and contributors in `NOTICE`, and keeps brand permissions separate in `TRADEMARKS.md`.
 
+The legacy double-helix icon was replaced with a new project-created S/X mark that is distinct from the retired product identity.
+
 Public Marketplace publication remains blocked by:
 
 - **Publisher**: create or confirm control of the exact `samsarix` Visual Studio Marketplace publisher declared by the manifest.
 - **Repository identity**: the canonical GitHub repository is still `Deathcharge/helix-vscode-extension`. If it is renamed or moved, update the manifest URLs and verify redirects before packaging.
-- **Icon provenance**: confirm that Samsarix LLC owns or has distribution rights to the supplied `icon.png`; replace it before publication if that cannot be documented.
+- **Brand clearance**: perform a professional trademark search for the Samsarix name and the new S/X mark, document provenance, and decide whether to pursue registration before a broad public launch.
 - **Copyright chain**: confirm that Samsarix LLC owns or has assignments for the copyrights it claims. Repository history is overwhelmingly owner-authored but includes automation identities.
 - **Privacy/legal review**: approve the local/remote endpoint disclosure and remote-endpoint opt-in before enabling non-loopback support in a public release.
 - **Human acceptance**: install the exact hashed VSIX in a clean Extension Development Host with a chat-capable Ollama model and complete the manual matrix above.

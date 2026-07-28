@@ -8,6 +8,7 @@
 - Added loopback-by-default endpoint policy, Workspace Trust enforcement, restrictive webview CSP, text-only rendering, request timeouts, and response bounds.
 - Replaced inaccurate product/setup/publishing documentation and added deterministic CI and VSIX content inspection.
 - Renamed the product and extension identity to Samsarix, owned by Samsarix LLC.
+- Replaced the legacy double-helix icon with an original Samsarix S/X mark.
 - Replaced contradictory custom licensing terms with the standard Mozilla Public License 2.0, attribution notice, and trademark policy.
 
-Marketplace publication remains gated on control of the `samsarix` publisher, icon confirmation, and the documented human acceptance run.
+Marketplace publication remains gated on control of the `samsarix` publisher, brand clearance, and the documented human acceptance run.

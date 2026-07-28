@@ -64,6 +64,17 @@ for (const name of required) {
   }
 }
 
+const iconEntry = entries.find(entry => entry.name === 'extension/icon.png');
+if (
+  !iconEntry ||
+  iconEntry.content.length < 24 ||
+  iconEntry.content.toString('hex', 0, 8) !== '89504e470d0a1a0a' ||
+  iconEntry.content.readUInt32BE(16) !== 256 ||
+  iconEntry.content.readUInt32BE(20) !== 256
+) {
+  throw new Error('Release icon must be a 256×256 PNG.');
+}
+
 for (const entry of entries) {
   if (!/extension\/(out|assets)\/.+\.(js|css)$/.test(entry.name)) {
     continue;

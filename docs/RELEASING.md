@@ -1,6 +1,6 @@
 # Releasing
 
-Public publication is not authorized by repository access alone. Confirm every external gate in [Productization](PRODUCTIZATION.md#owner-decisions-and-external-gates), especially Marketplace publisher control, the canonical repository URL, icon rights, and human acceptance of the exact artifact.
+Public publication is not authorized by repository access alone. Confirm every external gate in [Productization](PRODUCTIZATION.md#owner-decisions-and-external-gates), especially Marketplace publisher control, the canonical repository URL, brand clearance, and human acceptance of the exact artifact.
 
 ## Technical gates
 

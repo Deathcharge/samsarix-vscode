@@ -4,7 +4,7 @@ Samsarix is a small VS Code coding companion for developers who run [Ollama](htt
 
 This repository is independent: it needs no Samsarix account, subscription, hosted API, marketplace, or companion repository.
 
-> Release status: this is a verified release candidate. Public Marketplace publication still requires control of the `samsarix` publisher, owner confirmation of the icon asset, and a human acceptance run with a chat-capable Ollama model. See [the productization record](docs/PRODUCTIZATION.md#owner-decisions-and-external-gates).
+> Release status: this is a verified release candidate. Public Marketplace publication still requires control of the `samsarix` publisher, brand/trademark clearance, and a human acceptance run with a chat-capable Ollama model. See [the productization record](docs/PRODUCTIZATION.md#owner-decisions-and-external-gates).
 
 ## What it does
 
