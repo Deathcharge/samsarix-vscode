@@ -1,45 +1,15 @@
-# Dual Licensing Strategy
+# Licensing status
 
-This project is available under two licenses:
+The authoritative legal text currently present in this repository is [LICENSE](LICENSE). It resembles Business Source License 1.1 but contains project-specific fields that must be reviewed by an authorized owner.
 
-1. **Apache License 2.0** - For open-source use (free)
-2. **Proprietary Commercial License** - For businesses ($99-999/year)
+Older repository metadata and documentation also claimed Apache-2.0, MIT, and dual licensing. Those statements conflict and are not repeated as grants here. The package manifest uses `SEE LICENSE IN LICENSE` so tooling does not make a false SPDX claim.
 
-## Apache 2.0 (Open Source)
+Public distribution is blocked until an authorized owner confirms:
 
-Use this license if you:
-- Are building open-source software
-- Want to contribute to the community
-- Are using it internally
-- Don't need commercial support
-- Want to avoid licensing fees
+- the correct licensed-work name;
+- copyright holder and year;
+- change date and change license;
+- whether any separate commercial or open-source grant exists;
+- the rights to the Helix name and icon.
 
-See [LICENSE](./LICENSE) for full terms.
-
-## Proprietary Commercial License
-
-Use this license if you:
-- Are building commercial products
-- Want priority support
-- Need legal indemnification
-- Want to support the developer
-
-**Pricing:**
-- Startup: $99/year (up to 5 deployments)
-- Professional: $499/year (up to 25 deployments)
-- Enterprise: Custom quote (unlimited)
-
-**Includes:**
-- Priority email support (best-effort)
-- Indemnification for unmodified software
-- Commercial use rights
-- Quarterly consulting calls (Professional+)
-
-**Important:** This is a solo project. Support is best-effort, not guaranteed SLAs. I'm one person building this as a passion project, so please set realistic expectations.
-
-For commercial licensing inquiries:
-📧 licensing@helixcollective.io
-
----
-
-See the main [helix-orchestration](https://github.com/Deathcharge/helix-orchestration) repository for complete licensing documentation.
+This file records the discrepancy; it is not legal advice and does not alter [LICENSE](LICENSE).

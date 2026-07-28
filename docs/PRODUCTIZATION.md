@@ -141,7 +141,7 @@ Text rendering OR virtual diff -> modal approval -> WorkspaceEdit
 
 - `extension.ts`: registration only; no startup I/O.
 - `local/OllamaClient.ts`: endpoint validation, model discovery, chat/edit requests, timeout and response bounds.
-- `local/ChatViewProvider.ts`: webview state, explicit context capture, message validation, CSP, and text-only rendering.
+- `local/ChatViewProvider.ts`: webview state, explicit context capture, message validation, CSP, and text-only rendering through the two allowlisted `assets/chat.*` files.
 - `local/EditController.ts`: trusted-workspace and path policy, edit parsing, diff preview, stale-document check, apply/revert.
 - `local/previewProvider.ts`: read-only virtual documents for native diffs.
 - `local/policy.ts`: pure validation helpers covered by unit tests.
@@ -230,7 +230,7 @@ VS Code extensions execute with the user’s permissions, and the Marketplace ex
 - TypeScript strict compilation for only the release modules.
 - ESLint with no warnings.
 - Unit tests for endpoint policy, workspace/path policy, response bounds, structured edit parsing, request formatting, timeout/error normalization, stale edit protection helpers, and webview CSP/text-rendering invariants.
-- Package smoke test that unpacks the VSIX and asserts an allowlist of runtime files and the absence of forbidden tokens/paths.
+- Package smoke test that normalizes the VSIX for reproducible hashing, unpacks it, asserts an allowlist of runtime files, and checks for forbidden tokens/paths.
 - CI on supported Node versions using `npm ci`, lint, compile, tests with coverage, dependency audit, VSIX packaging, and package inspection.
 
 ### Manual acceptance

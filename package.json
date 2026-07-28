@@ -1,313 +1,103 @@
 {
   "name": "helix-vscode-extension",
-  "displayName": "Helix",
-  "description": "Multi-agent AI coordination platform for VS Code - Connect with Kael, Lumina, Vega, and more agents for intelligent code assistance, inline completions, and chat",
+  "displayName": "Helix — Local Review-First AI",
+  "description": "Ask a local Ollama model about explicit code selections and review one-file edits before applying them.",
   "version": "1.0.0",
   "publisher": "samsara-helix",
+  "license": "SEE LICENSE IN LICENSE",
   "icon": "icon.png",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/Deathcharge/helix-vscode-extension/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/helix-collective/helix-unified.git"
-  },
-  "homepage": "https://github.com/Deathcharge/helix-vscode-extension#readme",
+  "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
-    "AI",
     "Machine Learning",
-    "Programming Languages",
     "Other"
   ],
   "keywords": [
-    "ai",
-    "agents",
-    "code-completion",
-    "copilot",
-    "code-analysis",
-    "refactoring",
-    "test-generation"
+    "ollama",
+    "local ai",
+    "code review",
+    "privacy",
+    "diff"
   ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Deathcharge/helix-vscode-extension.git"
+  },
+  "homepage": "https://github.com/Deathcharge/helix-vscode-extension#readme",
+  "bugs": {
+    "url": "https://github.com/Deathcharge/helix-vscode-extension/issues"
+  },
   "activationEvents": [
-    "onStartupFinished"
+    "onView:helix.chatPanel",
+    "onCommand:helix.openChat",
+    "onCommand:helix.configureOllama",
+    "onCommand:helix.testConnection",
+    "onCommand:helix.addSelection",
+    "onCommand:helix.runAgentEdit",
+    "onCommand:helix.revertLastEdit",
+    "onCommand:helix.showPrivacy"
   ],
-  "main": "./out/extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Chat without workspace context is available. Attaching code and editing files require Workspace Trust.",
+      "restrictedConfigurations": [
+        "helix.ollama.endpoint",
+        "helix.ollama.model",
+        "helix.ollama.allowRemoteEndpoint"
+      ]
+    },
+    "virtualWorkspaces": false
+  },
   "contributes": {
     "commands": [
       {
-        "command": "helix.openAgentPanel",
-        "title": "Open Agent Panel",
+        "command": "helix.openChat",
+        "title": "Open Local Chat",
         "category": "Helix"
       },
       {
-        "command": "helix.openMarketplace",
-        "title": "Open Agent Marketplace",
+        "command": "helix.configureOllama",
+        "title": "Configure Ollama",
         "category": "Helix"
       },
       {
-        "command": "helix.openCoordinationDashboard",
-        "title": "Open Performance Dashboard",
+        "command": "helix.testConnection",
+        "title": "Test Ollama Connection",
         "category": "Helix"
       },
       {
-        "command": "helix.openSpiralBuilder",
-        "title": "Open Spiral Builder",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.connectToAgent",
-        "title": "Connect to Agent",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.executeWorkflow",
-        "title": "Execute Workflow",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.quickAction",
-        "title": "Quick Action",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.analyzeCode",
-        "title": "Analyze Code",
-        "category": "Helix",
-        "icon": "$(search)"
-      },
-      {
-        "command": "helix.generateTests",
-        "title": "Generate Tests",
-        "category": "Helix",
-        "icon": "$(beaker)"
-      },
-      {
-        "command": "helix.refactorCode",
-        "title": "Refactor Code",
-        "category": "Helix",
-        "icon": "$(wrench)"
-      },
-      {
-        "command": "helix.generateDocumentation",
-        "title": "Generate Documentation",
-        "category": "Helix",
-        "icon": "$(book)"
-      },
-      {
-        "command": "helix.explainCode",
-        "title": "Explain Code",
-        "category": "Helix",
-        "icon": "$(comment-discussion)"
-      },
-      {
-        "command": "helix.toggleCoordinationMonitoring",
-        "title": "Toggle Performance Monitoring",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.showCoordinationDetails",
-        "title": "Show Performance Details",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.selectModel",
-        "title": "Select Model",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.login",
-        "title": "Sign In with Password",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.loginWithGoogle",
-        "title": "Sign In with Google",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.loginWithGithub",
-        "title": "Sign In with GitHub",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.logout",
-        "title": "Sign Out",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.createAccount",
-        "title": "Create Helix Account",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.openChatPanel",
-        "title": "Open Chat Panel",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.toggleInlineCompletions",
-        "title": "Toggle Inline Completions",
+        "command": "helix.addSelection",
+        "title": "Add Editor Selection to Local Chat",
         "category": "Helix"
       },
       {
         "command": "helix.runAgentEdit",
-        "title": "Run Agent Edit…",
-        "category": "Helix",
-        "icon": "$(edit)"
+        "title": "Propose Edit to Active File…",
+        "category": "Helix"
       },
       {
         "command": "helix.revertLastEdit",
-        "title": "Revert Last Agent Edit",
-        "category": "Helix",
-        "icon": "$(discard)"
-      },
-      {
-        "command": "helix.generateCommitMessage",
-        "title": "Generate Commit Message",
+        "title": "Revert Last Applied Edit",
         "category": "Helix"
       },
       {
-        "command": "helix.generatePRDescription",
-        "title": "Generate PR Description",
+        "command": "helix.showPrivacy",
+        "title": "Show Data & Privacy Details",
         "category": "Helix"
-      },
-      {
-        "command": "helix.explainGitBlame",
-        "title": "Explain Git Blame for Line",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.showProviderPicker",
-        "title": "Show AI Provider Status",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.mcpReconnectServer",
-        "title": "Reconnect MCP Server",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.mcpListTools",
-        "title": "List MCP Tools",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.refreshAgents",
-        "title": "Refresh Agents",
-        "category": "Helix",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "helix.selectAgent",
-        "title": "Select Agent",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.inlineChat",
-        "title": "Inline Chat",
-        "category": "Helix",
-        "icon": "$(comment)"
-      },
-      {
-        "command": "helix.indexCodebase",
-        "title": "Index Codebase for Semantic Search",
-        "category": "Helix",
-        "icon": "$(search)"
-      },
-      {
-        "command": "helix.semanticSearch",
-        "title": "Semantic Search",
-        "category": "Helix",
-        "icon": "$(search)"
-      },
-      {
-        "command": "helix.configureLocalModel",
-        "title": "Configure Local AI Model (Ollama)",
-        "category": "Helix",
-        "icon": "$(server)"
-      },
-      {
-        "command": "helix.supercomplete",
-        "title": "Trigger Supercomplete (Multi-line)",
-        "category": "Helix"
-      },
-      {
-        "command": "helix.checkpointRestore",
-        "title": "Restore Checkpoint",
-        "category": "Helix",
-        "icon": "$(history)"
-      },
-      {
-        "command": "helix.checkpointDiff",
-        "title": "Compare Checkpoint Diff",
-        "category": "Helix",
-        "icon": "$(diff)"
       }
     ],
-    "menus": {
-      "view/title": [
+    "viewsContainers": {
+      "activitybar": [
         {
-          "command": "helix.refreshAgents",
-          "when": "view == helixAgentView",
-          "group": "navigation"
-        }
-      ],
-      "editor/context": [
-        {
-          "command": "helix.analyzeCode",
-          "group": "helix@1",
-          "when": "editorHasSelection || editorTextFocus"
-        },
-        {
-          "command": "helix.explainCode",
-          "group": "helix@2",
-          "when": "editorHasSelection || editorTextFocus"
-        },
-        {
-          "command": "helix.refactorCode",
-          "group": "helix@3",
-          "when": "editorHasSelection"
-        },
-        {
-          "command": "helix.runAgentEdit",
-          "group": "helix@4",
-          "when": "editorTextFocus"
-        },
-        {
-          "command": "helix.generateTests",
-          "group": "helix@4",
-          "when": "editorTextFocus"
-        },
-        {
-          "command": "helix.generateDocumentation",
-          "group": "helix@5",
-          "when": "editorTextFocus"
-        }
-      ],
-      "commandPalette": [
-        {
-          "command": "helix.analyzeCode",
-          "when": "editorIsOpen"
-        },
-        {
-          "command": "helix.explainCode",
-          "when": "editorIsOpen"
-        },
-        {
-          "command": "helix.refactorCode",
-          "when": "editorIsOpen"
-        },
-        {
-          "command": "helix.generateTests",
-          "when": "editorIsOpen"
-        },
-        {
-          "command": "helix.generateDocumentation",
-          "when": "editorIsOpen"
+          "id": "helix-sidebar",
+          "title": "Helix",
+          "icon": "icon.png"
         }
       ]
     },
@@ -316,605 +106,113 @@
         {
           "type": "webview",
           "id": "helix.chatPanel",
-          "name": "Helix Chat"
-        },
-        {
-          "id": "helixAgentView",
-          "name": "Agents",
-          "when": "true"
+          "name": "Local Assistant"
         }
       ]
     },
-    "viewsContainers": {
-      "activitybar": [
+    "menus": {
+      "view/title": [
         {
-          "id": "helix-sidebar",
-          "title": "Helix AI",
-          "icon": "$(comment-discussion)"
+          "command": "helix.configureOllama",
+          "when": "view == helix.chatPanel",
+          "group": "navigation@1"
+        },
+        {
+          "command": "helix.testConnection",
+          "when": "view == helix.chatPanel",
+          "group": "navigation@2"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "helix.addSelection",
+          "when": "editorHasSelection && isWorkspaceTrusted",
+          "group": "helix@1"
+        },
+        {
+          "command": "helix.runAgentEdit",
+          "when": "resourceScheme == file && isWorkspaceTrusted",
+          "group": "helix@2"
         }
       ]
-    },
-    "configuration": {
-      "title": "Helix",
-      "properties": {
-        "helix.apiEndpoint": {
-          "type": "string",
-          "default": "https://api.helixcollective.io",
-          "description": "Helix API endpoint URL"
-        },
-        "helix.websocketEndpoint": {
-          "type": "string",
-          "default": "wss://api.helixcollective.io",
-          "description": "Helix WebSocket endpoint URL"
-        },
-        "helix.enableCoordinationMonitoring": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable real-time performance monitoring"
-        },
-        "helix.defaultAgent": {
-          "type": "string",
-          "default": "kael",
-          "description": "Default agent to connect with"
-        },
-        "helix.autoConnect": {
-          "type": "boolean",
-          "default": false,
-          "description": "Automatically connect to Helix on startup"
-        },
-        "helix.enableInlineCompletions": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable Helix AI inline code completions (ghost text)"
-        },
-        "helix.activeConfigurationProfile": {
-          "type": "string",
-          "default": "default",
-          "description": "Active configuration profile for API providers"
-        },
-        "helix.currentAgentMode": {
-          "type": "string",
-          "default": "code",
-          "enum": [
-            "code",
-            "audit",
-            "research",
-            "documentation",
-            "testing",
-            "architecture",
-            "security"
-          ],
-          "description": "Current agent mode (persona)"
-        },
-        "helix.autoApprove.enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable auto-approval for operations"
-        },
-        "helix.autoApprove.yoloMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "YOLO mode - approve all operations without confirmation"
-        },
-        "helix.autoApprove.read": {
-          "type": "boolean",
-          "default": false,
-          "description": "Auto-approve file read operations"
-        },
-        "helix.autoApprove.write": {
-          "type": "boolean",
-          "default": false,
-          "description": "Auto-approve file write operations"
-        },
-        "helix.autoApprove.delete": {
-          "type": "boolean",
-          "default": false,
-          "description": "Auto-approve file delete operations"
-        },
-        "helix.autoApprove.execute": {
-          "type": "boolean",
-          "default": false,
-          "description": "Auto-approve command execution operations"
-        },
-        "helix.display.collapseThinkingBlocks": {
-          "type": "boolean",
-          "default": true,
-          "description": "Collapse thinking blocks by default"
-        },
-        "helix.display.showVisualTimeline": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show visual timeline of task messages"
-        },
-        "helix.display.showTimestamps": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show timestamp for every message"
-        },
-        "helix.display.showDiffStatistics": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show lines added/removed statistics"
-        },
-        "helix.display.sendOnEnter": {
-          "type": "boolean",
-          "default": true,
-          "description": "Press Enter to send message (Shift+Enter for new line)"
-        },
-        "helix.display.hideCostBelowThreshold": {
-          "type": "number",
-          "default": 0,
-          "description": "Hide costs below this threshold (0 = show all costs)"
-        },
-        "helix.context.openTabsLimit": {
-          "type": "number",
-          "default": 100,
-          "minimum": 0,
-          "maximum": 1000,
-          "description": "Maximum number of open tabs to include in context"
-        },
-        "helix.context.workspaceFilesLimit": {
-          "type": "number",
-          "default": 500,
-          "minimum": 0,
-          "maximum": 5000,
-          "description": "Maximum number of workspace files to include in context"
-        },
-        "helix.context.gitStatusMaxFiles": {
-          "type": "number",
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1000,
-          "description": "Maximum number of git status files (0 = disabled)"
-        },
-        "helix.context.concurrentFileReadsLimit": {
-          "type": "number",
-          "default": 10,
-          "minimum": 1,
-          "maximum": 100,
-          "description": "Maximum number of concurrent file reads"
-        },
-        "helix.context.fileReadAutoTruncateThreshold": {
-          "type": "number",
-          "default": 500,
-          "minimum": 0,
-          "description": "File read auto-truncate threshold in lines (0 = no truncation)"
-        },
-        "helix.context.includeDiagnostics": {
-          "type": "boolean",
-          "default": false,
-          "description": "Include diagnostic messages in context"
-        },
-        "helix.context.maxDiagnosticMessages": {
-          "type": "number",
-          "default": 50,
-          "minimum": 0,
-          "maximum": 1000,
-          "description": "Maximum number of diagnostic messages to include"
-        },
-        "helix.context.includeTimeInfo": {
-          "type": "boolean",
-          "default": false,
-          "description": "Include current time and timezone in context"
-        },
-        "helix.terminal.useInlineTerminal": {
-          "type": "boolean",
-          "default": true,
-          "description": "Use inline terminal (bypass shell profiles)"
-        },
-        "helix.terminal.outputLimit": {
-          "type": "number",
-          "default": 2500,
-          "minimum": 100,
-          "maximum": 10000,
-          "description": "Terminal output limit in lines"
-        },
-        "helix.terminal.characterLimit": {
-          "type": "number",
-          "default": 50000,
-          "minimum": 1000,
-          "maximum": 500000,
-          "description": "Terminal character limit (hard cap)"
-        },
-        "helix.terminal.collapseProgressBars": {
-          "type": "boolean",
-          "default": true,
-          "description": "Collapse progress bars in terminal output"
-        },
-        "helix.browser.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable browser automation"
-        },
-        "helix.browser.viewportSize": {
-          "type": "string",
-          "default": "medium",
-          "enum": [
-            "small",
-            "medium",
-            "large"
-          ],
-          "description": "Browser viewport size"
-        },
-        "helix.browser.screenshotQuality": {
-          "type": "number",
-          "default": 75,
-          "minimum": 10,
-          "maximum": 100,
-          "description": "Browser screenshot quality (percentage)"
-        },
-        "helix.browser.remoteDebuggingPort": {
-          "type": "number",
-          "default": 9222,
-          "minimum": 1024,
-          "maximum": 65535,
-          "description": "Chrome remote debugging port"
-        },
-        "helix.notifications.textToSpeechEnabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable text-to-speech for AI responses"
-        },
-        "helix.notifications.soundEffectsEnabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable sound effects for notifications and events"
-        },
-        "helix.notifications.systemNotificationsEnabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable system notifications for important events"
-        },
-        "helix.notifications.notificationThreshold": {
-          "type": "string",
-          "default": "important",
-          "enum": [
-            "all",
-            "important",
-            "errors-only"
-          ],
-          "description": "Notification threshold level"
-        },
-        "helix.checkpoints.autoCreateEnabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically create checkpoints during task execution"
-        },
-        "helix.checkpoints.autoCleanupEnabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically clean up old checkpoints and tasks"
-        },
-        "helix.checkpoints.maxCheckpointsPerTask": {
-          "type": "number",
-          "default": 10,
-          "minimum": 1,
-          "maximum": 100,
-          "description": "Maximum number of checkpoints to keep per task"
-        },
-        "helix.checkpoints.taskRetentionDays": {
-          "type": "number",
-          "default": 7,
-          "minimum": 1,
-          "maximum": 90,
-          "description": "Number of days to retain task history"
-        },
-        "helix.rules.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable loading project rules from .helixrules, .helix/rules.md, or .cursor/rules"
-        },
-        "helix.rules.globalRulesPath": {
-          "type": "string",
-          "default": "",
-          "description": "Path to global rules file (e.g. ~/.helix/global-rules.md)"
-        },
-        "helix.rules.showIndicator": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show rules status indicator in the status bar"
-        },
-        "helix.context.enableMentions": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable @-mentions in chat (e.g. @file, @git, @diagnostics)"
-        },
-        "helix.context.maxMentionFileSize": {
-          "type": "number",
-          "default": 100000,
-          "description": "Maximum file size in bytes for @file mentions"
-        },
-        "helix.slashCommands.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable slash commands in chat (/fix, /test, /docs, /review, etc.)"
-        },
-        "helix.mcp.servers": {
-          "type": "object",
-          "default": {},
-          "description": "MCP server configurations. Keys are server names, values are { command, args?, env? }",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "command": {
-                "type": "string"
-              },
-              "args": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "env": {
-                "type": "object"
-              }
-            },
-            "required": [
-              "command"
-            ]
-          }
-        },
-        "helix.mcp.autoApproveTools": {
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "description": "Tool names from MCP servers that can be auto-approved without user confirmation"
-        },
-        "helix.mcp.networkTimeout": {
-          "type": "number",
-          "default": 30000,
-          "description": "Timeout in milliseconds for MCP server network operations"
-        },
-        "helix.chat.enableImageAttachments": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable image and file attachments in chat via paste, drag-drop, or button"
-        },
-        "helix.chat.maxAttachmentSizeKB": {
-          "type": "number",
-          "default": 5120,
-          "description": "Maximum attachment size in KB (default 5MB)"
-        },
-        "helix.providers.showStatusInSidebar": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show provider health status in the sidebar"
-        },
-        "helix.providers.showActiveProviderInStatusBar": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show the active AI provider and model in the status bar"
-        },
-        "helix.preferredModel": {
-          "type": "string",
-          "default": "",
-          "description": "Pin a specific model for all Helix requests (e.g. claude-sonnet-4-6, gpt-4o, grok-3-mini). Leave empty to let Helix auto-route to the best available model. Use 'Helix: Select Model' from the Command Palette to change interactively."
-        },
-        "helix.memory.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable agent memory persistence across sessions"
-        },
-        "helix.memory.autoLearn": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically extract and store facts from agent conversations"
-        },
-        "helix.memory.maxMemoriesPerAgent": {
-          "type": "number",
-          "default": 500,
-          "minimum": 10,
-          "maximum": 5000,
-          "description": "Maximum number of memory entries per agent (oldest auto-pruned when limit reached)"
-        },
-        "helix.memory.scope": {
-          "type": "string",
-          "default": "workspace",
-          "enum": [
-            "workspace",
-            "global"
-          ],
-          "description": "Scope for agent memory storage"
-        },
-        "helix.git.autoSuggestCommitMessage": {
-          "type": "boolean",
-          "default": false,
-          "description": "Automatically suggest commit messages when opening the SCM view"
-        },
-        "helix.git.commitMessageStyle": {
-          "type": "string",
-          "default": "conventional",
-          "enum": [
-            "conventional",
-            "descriptive",
-            "concise"
-          ],
-          "description": "Style for generated commit messages"
-        },
-        "helix.git.warnOnMainBranchEdit": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show a warning when editing files on main or master branch"
-        },
-        "helix.localModel.enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable local AI model support via Ollama"
-        },
-        "helix.localModel.provider": {
-          "type": "string",
-          "default": "ollama",
-          "enum": [
-            "ollama",
-            "lmstudio",
-            "llamacpp"
-          ],
-          "description": "Local model provider"
-        },
-        "helix.localModel.endpoint": {
-          "type": "string",
-          "default": "http://localhost:11434",
-          "description": "Local model API endpoint URL"
-        },
-        "helix.localModel.model": {
-          "type": "string",
-          "default": "codellama:13b",
-          "description": "Local model name (e.g., codellama:13b, deepseek-coder:6.7b, starcoder2:7b)"
-        },
-        "helix.localModel.contextWindow": {
-          "type": "number",
-          "default": 4096,
-          "minimum": 1024,
-          "maximum": 131072,
-          "description": "Context window size for local model"
-        },
-        "helix.codebaseIndexing.enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable codebase indexing for semantic search"
-        },
-        "helix.codebaseIndexing.provider": {
-          "type": "string",
-          "default": "local",
-          "enum": [
-            "local",
-            "chromadb",
-            "pinecone"
-          ],
-          "description": "Vector store provider for code embeddings"
-        },
-        "helix.codebaseIndexing.embeddingsModel": {
-          "type": "string",
-          "default": "all-MiniLM-L6-v2",
-          "description": "Embeddings model for code chunks"
-        },
-        "helix.codebaseIndexing.chunkSize": {
-          "type": "number",
-          "default": 500,
-          "minimum": 100,
-          "maximum": 2000,
-          "description": "Code chunk size in tokens for indexing"
-        },
-        "helix.codebaseIndexing.chunkOverlap": {
-          "type": "number",
-          "default": 50,
-          "minimum": 0,
-          "maximum": 500,
-          "description": "Overlap between code chunks in tokens"
-        },
-        "helix.codebaseIndexing.autoIndexOnStartup": {
-          "type": "boolean",
-          "default": false,
-          "description": "Automatically index codebase on workspace open"
-        },
-        "helix.supercomplete.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable multi-line supercomplete suggestions"
-        },
-        "helix.supercomplete.maxLines": {
-          "type": "number",
-          "default": 15,
-          "minimum": 1,
-          "maximum": 50,
-          "description": "Maximum number of lines for supercomplete suggestions"
-        },
-        "helix.inlineChat.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable inline chat overlay (Ctrl+I)"
-        },
-        "helix.inlineChat.diffPreview": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show diff preview for inline chat code changes"
-        }
-      }
     },
     "keybindings": [
       {
-        "command": "helix.analyzeCode",
-        "key": "ctrl+shift+a",
-        "mac": "cmd+shift+a",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "helix.explainCode",
-        "key": "ctrl+shift+e",
-        "mac": "cmd+shift+e",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "helix.refactorCode",
-        "key": "ctrl+shift+r",
-        "mac": "cmd+shift+r",
-        "when": "editorHasSelection"
-      },
-      {
-        "command": "helix.generateTests",
-        "key": "ctrl+shift+t",
-        "mac": "cmd+shift+t",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "helix.inlineChat",
-        "key": "ctrl+i",
-        "mac": "cmd+i",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "helix.semanticSearch",
-        "key": "ctrl+shift+f",
-        "mac": "cmd+shift+f",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "helix.supercomplete",
-        "key": "ctrl+shift+space",
-        "mac": "cmd+shift+space",
-        "when": "editorTextFocus"
+        "command": "helix.openChat",
+        "key": "ctrl+shift+h",
+        "mac": "cmd+shift+h"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Helix",
+      "properties": {
+        "helix.ollama.endpoint": {
+          "type": "string",
+          "default": "http://127.0.0.1:11434",
+          "scope": "machine",
+          "description": "Ollama origin. Loopback HTTP is allowed; remote endpoints require HTTPS and the explicit opt-in below. Helix sends requests only after a user action."
+        },
+        "helix.ollama.model": {
+          "type": "string",
+          "default": "qwen2.5-coder:7b",
+          "scope": "machine",
+          "description": "Installed Ollama model used for chat and edit proposals."
+        },
+        "helix.ollama.allowRemoteEndpoint": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "description": "Allow an HTTPS Ollama endpoint that is not loopback. Enabling this can send prompts and explicitly attached source code across the network."
+        },
+        "helix.requestTimeoutSeconds": {
+          "type": "number",
+          "default": 60,
+          "minimum": 5,
+          "maximum": 120,
+          "scope": "machine",
+          "description": "Maximum time for an Ollama request before Helix cancels it."
+        },
+        "helix.maxContextCharacters": {
+          "type": "number",
+          "default": 60000,
+          "minimum": 1000,
+          "maximum": 100000,
+          "scope": "machine",
+          "description": "Maximum characters in an explicitly attached editor selection."
+        }
+      }
+    }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile",
-    "test": "jest",
-    "lint": "eslint src/",
-    "package": "npx @vscode/vsce package",
-    "publish": "npx @vscode/vsce publish"
+    "clean": "node scripts/clean.mjs",
+    "compile": "npm run clean && tsc -p ./",
+    "typecheck": "tsc -p ./ --noEmit",
+    "watch": "tsc --watch -p ./",
+    "lint": "eslint src/extension.ts src/local/**/*.ts",
+    "test": "jest --coverage",
+    "prepackage": "npm run compile",
+    "package": "vsce package --out dist/helix-vscode-extension-1.0.0.vsix && node scripts/normalize-vsix.mjs",
+    "inspect:package": "node scripts/inspect-package.mjs",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "check": "npm run lint && npm run typecheck && npm test -- --runInBand && npm run package && npm run inspect:package"
   },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "ws": "^8.16.0"
+  "overrides": {
+    "brace-expansion": "5.0.8"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.5",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
     "@types/vscode": "^1.85.0",
-    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
-    "@vscode/vsce": "^3.7.1",
+    "@vscode/vsce": "^3.9.2",
     "eslint": "^9.39.3",
+    "globals": "^16.0.0",
     "jest": "^29.7.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.56.1"
-  },
-  "galleryBanner": {
-    "color": "#1a1b26",
-    "theme": "dark"
-  },
-  "overrides": {
-    "underscore": ">=1.13.8"
+    "typescript-eslint": "^8.56.1",
+    "yauzl": "^2.10.0",
+    "yazl": "^2.5.1"
   }
 }
