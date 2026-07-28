@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 export class PreviewProvider
   implements vscode.TextDocumentContentProvider, vscode.Disposable
 {
-  public static readonly scheme = 'helix-proposed';
+  public static readonly scheme = 'samsarix-proposed';
 
   private readonly contents = new Map<string, string>();
   private readonly changed = new vscode.EventEmitter<vscode.Uri>();

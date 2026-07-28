@@ -32,38 +32,38 @@ export function activate(context: vscode.ExtensionContext): void {
       chatProvider,
       { webviewOptions: { retainContextWhenHidden: true } }
     ),
-    vscode.commands.registerCommand('helix.openChat', async () => {
+    vscode.commands.registerCommand('samsarix.openChat', async () => {
       await vscode.commands.executeCommand(
-        'workbench.view.extension.helix-sidebar'
+        'workbench.view.extension.samsarix-sidebar'
       );
       await vscode.commands.executeCommand(`${ChatViewProvider.viewType}.focus`);
     }),
-    vscode.commands.registerCommand('helix.configureOllama', () =>
+    vscode.commands.registerCommand('samsarix.configureOllama', () =>
       runCommand(() => configureOllama())
     ),
-    vscode.commands.registerCommand('helix.testConnection', () =>
+    vscode.commands.registerCommand('samsarix.testConnection', () =>
       runCommand(() => chatProvider.testConnection())
     ),
-    vscode.commands.registerCommand('helix.addSelection', () =>
+    vscode.commands.registerCommand('samsarix.addSelection', () =>
       runCommand(() => chatProvider.addActiveSelection())
     ),
-    vscode.commands.registerCommand('helix.runAgentEdit', () =>
+    vscode.commands.registerCommand('samsarix.runAgentEdit', () =>
       runCommand(async () => {
         const outcome = await editController.propose();
         if (outcome.status !== 'rejected') {
-          void vscode.window.showInformationMessage(`Helix: ${outcome.message}`);
+          void vscode.window.showInformationMessage(`Samsarix: ${outcome.message}`);
         }
       })
     ),
-    vscode.commands.registerCommand('helix.revertLastEdit', () =>
+    vscode.commands.registerCommand('samsarix.revertLastEdit', () =>
       runCommand(() => editController.revert())
     ),
-    vscode.commands.registerCommand('helix.showPrivacy', async () => {
+    vscode.commands.registerCommand('samsarix.showPrivacy', async () => {
       const readme = vscode.Uri.joinPath(context.extensionUri, 'README.md');
       await vscode.commands.executeCommand('markdown.showPreview', readme);
     }),
     vscode.workspace.onDidChangeConfiguration(event => {
-      if (event.affectsConfiguration('helix')) {
+      if (event.affectsConfiguration('samsarix')) {
         chatProvider.refreshConfiguration();
       }
     })
@@ -79,7 +79,7 @@ async function configureOllama(): Promise<void> {
   const endpointInput = await vscode.window.showInputBox({
     title: 'Configure local Ollama',
     prompt:
-      'Helix connects only after an explicit action. Remote endpoints require HTTPS and the User Setting opt-in.',
+      'Samsarix connects only after an explicit action. Remote endpoints require HTTPS and the User Setting opt-in.',
     value: current.endpoint,
     ignoreFocusOut: true,
     validateInput: value => {
@@ -103,7 +103,7 @@ async function configureOllama(): Promise<void> {
   const models = await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `Helix: checking Ollama at ${endpoint}`,
+      title: `Samsarix: checking Ollama at ${endpoint}`,
       cancellable: true,
     },
     async (_progress, cancellation) => {
@@ -125,7 +125,7 @@ async function configureOllama(): Promise<void> {
 
   if (models.length === 0) {
     void vscode.window.showWarningMessage(
-      'Helix connected, but no Ollama models are installed. Run “ollama pull qwen2.5-coder:7b”, then configure again.'
+      'Samsarix connected, but no Ollama models are installed. Run “ollama pull qwen2.5-coder:7b”, then configure again.'
     );
     return;
   }
@@ -136,7 +136,7 @@ async function configureOllama(): Promise<void> {
       description: model === current.model ? 'Current model' : undefined,
     })),
     {
-      title: 'Select the local model Helix should use',
+      title: 'Select the local model Samsarix should use',
       placeHolder: 'Installed Ollama models',
       matchOnDescription: true,
     }
@@ -147,7 +147,7 @@ async function configureOllama(): Promise<void> {
 
   await updateGlobalConfiguration('ollama.model', selected.label);
   void vscode.window.showInformationMessage(
-    `Helix will use ${selected.label} at ${endpoint}. No request runs until you choose an action.`
+    `Samsarix will use ${selected.label} at ${endpoint}. No request runs until you choose an action.`
   );
 }
 
@@ -157,6 +157,6 @@ async function runCommand(action: () => Promise<unknown>): Promise<void> {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'An unexpected error occurred.';
-    void vscode.window.showErrorMessage(`Helix: ${message}`);
+    void vscode.window.showErrorMessage(`Samsarix: ${message}`);
   }
 }

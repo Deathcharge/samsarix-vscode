@@ -104,7 +104,7 @@
       article.className = `message ${message.role}`;
 
       const heading = document.createElement('strong');
-      heading.textContent = message.role === 'user' ? 'You' : 'Helix';
+      heading.textContent = message.role === 'user' ? 'You' : 'Samsarix';
       article.appendChild(heading);
 
       const content = document.createElement('p');

@@ -1,14 +1,14 @@
-# Helix productization plan
+# Samsarix productization plan
 
-Status: implementation contract  
+Status: verified release candidate; Marketplace publication externally gated
 Date: 2026-07-28  
 Release target: `1.0.0` only after every P0 gate below passes
 
 ## Executive decision
 
-Helix will ship as a **local-first VS Code coding companion for small, reviewable edits**. It connects only to an Ollama server chosen by the user, sends context only after an explicit action, and never changes a file until the user reviews a native VS Code diff and approves it.
+Samsarix will ship as a **local-first VS Code coding companion for small, reviewable edits**. It connects only to an Ollama server chosen by the user, sends context only after an explicit action, and never changes a file until the user reviews a native VS Code diff and approves it.
 
-The previous repository described a much broader hosted “multi-agent coordination platform.” That product is not independently shippable from this repository: its primary paths require an undocumented Helix API, several visible surfaces use hard-coded or generated mock data, many declared commands have no implementation, and activation starts remote traffic without a user action. Those surfaces are not part of the release.
+The previous repository described a much broader hosted “multi-agent coordination platform.” That legacy product is not independently shippable from this repository: its primary paths require an undocumented hosted API, several visible surfaces use hard-coded or generated mock data, many declared commands have no implementation, and activation starts remote traffic without a user action. Those surfaces are not part of the release.
 
 ## Problem, audience, and job to be done
 
@@ -26,7 +26,7 @@ Local-model users can already assemble broad agent systems, but the useful core 
 
 ### Product promise
 
-1. No account, subscription, marketplace, telemetry, or Helix cloud dependency.
+1. No account, subscription, marketplace, telemetry, or Samsarix cloud dependency.
 2. No network request during activation or passive typing.
 3. The UI identifies the endpoint, model, and attached context before a request.
 4. Edit proposals are limited to the active workspace file.
@@ -35,7 +35,7 @@ Local-model users can already assemble broad agent systems, but the useful core 
 
 ## Category and market baseline
 
-Helix belongs in the **local AI code-assistant** category, not the multi-agent platform category.
+Samsarix belongs in the **local AI code-assistant** category, not the multi-agent platform category.
 
 Current products establish a high baseline:
 
@@ -43,7 +43,7 @@ Current products establish a high baseline:
 - Cline makes human control central: its documentation says file edits and terminal commands require approval, with Plan and Act modes and visible diffs. ([Cline IDE guide](https://docs.cline.bot/usage/ide), accessed 2026-07-28.)
 - Ollama itself now documents a local-model workflow in VS Code. ([Ollama VS Code integration](https://docs.ollama.com/integrations/vscode), accessed 2026-07-28.)
 
-Helix cannot credibly compete on breadth. Its wedge is a smaller and more inspectable contract:
+Samsarix cannot credibly compete on breadth. Its wedge is a smaller and more inspectable contract:
 
 - one provider (Ollama), one file at a time, and no tool or shell execution;
 - explicit selection attachment rather than implicit workspace harvesting;
@@ -57,26 +57,26 @@ This is intentionally narrower than general agents. The goal is trustworthy comp
 
 ### First run
 
-1. The user opens the Helix sidebar.
-2. Helix shows “Not connected,” the configured endpoint, the configured model, and setup instructions. It does not make a request.
+1. The user opens the Samsarix sidebar.
+2. Samsarix shows “Not connected,” the configured endpoint, the configured model, and setup instructions. It does not make a request.
 3. **Configure Ollama** fetches the model list only after the click. The user selects an installed model; the choice is stored in user settings, not workspace settings.
 4. **Test connection** gives a bounded, actionable result.
 
 ### Ask with explicit context
 
 1. The user selects code and clicks **Add editor selection**, or sends a question with no code attached.
-2. Helix shows the relative filename, line range, and character count before sending.
-3. On Send, Helix posts the question and the displayed context to the configured Ollama `/api/chat` endpoint.
+2. Samsarix shows the relative filename, line range, and character count before sending.
+3. On Send, Samsarix posts the question and the displayed context to the configured Ollama `/api/chat` endpoint.
 4. The response is rendered as text. No response HTML is interpreted.
 
 ### Propose and apply an edit
 
 1. In a trusted workspace, the user opens a file, describes a change, and clicks **Propose edit**.
-2. Helix explicitly sends that file (bounded by the documented size limit) and the instruction to Ollama.
-3. The model returns a structured whole-file proposal. Helix validates the shape and size.
+2. Samsarix explicitly sends that file (bounded by the documented size limit) and the instruction to Ollama.
+3. The model returns a structured whole-file proposal. Samsarix validates the shape and size.
 4. A native VS Code diff opens with the complete workspace-relative path.
 5. A modal offers Apply or Reject. Apply is unavailable if the document changed after generation.
-6. On Apply, Helix performs one `WorkspaceEdit`. The previous content is retained in memory only for session-scoped revert.
+6. On Apply, Samsarix performs one `WorkspaceEdit`. The previous content is retained in memory only for session-scoped revert.
 
 ## Scope
 
@@ -93,7 +93,7 @@ This is intentionally narrower than general agents. The goal is trustworthy comp
 - Replace fictional setup, product, publishing, and licensing claims with repository-accurate documentation.
 - Add deterministic lint, type-check, unit-test, package, and package-content CI gates.
 - Produce a VSIX and inspect its exact file list for secrets, mocks, test data, and dead runtime modules.
-- Resolve or explicitly block contradictory license metadata before marketplace publication.
+- Use one standard license, preserve attribution in source and packaged artifacts, and separate source-code rights from Samsarix trademark rights.
 
 ### P1 — high-value follow-up
 
@@ -112,9 +112,9 @@ This is intentionally narrower than general agents. The goal is trustworthy comp
 - Accounts, subscriptions, team sync, marketplaces, agent personas, coordination dashboards, workflows, or performance gamification.
 - Images, audio, long-term memory, checkpoints, or cross-device history.
 
-### Removed or quarantined from the release surface
+### Removed from the current tree and release surface
 
-The old implementations remain in source history for now, but they are not imported, compiled, contributed, or packaged: hosted API/auth/WebSocket services, marketplace and subscription UX, agent/spiral/coordination webviews, agent polling, memory sync, MCP subprocesses, browser/terminal managers, passive inline completions, old checkpoint system, and generated mock metrics. A later cleanup can delete this historical source after owners confirm nothing needs to be extracted.
+The verified release slice replaced and then removed the old hosted API/auth/WebSocket services, marketplace and subscription UX, agent/spiral/coordination webviews, agent polling, memory sync, MCP subprocesses, browser/terminal managers, passive inline completions, checkpoint system, generated mock metrics, and their stale tests/assets. Git history preserves the prior implementation without making it part of the current security or maintenance surface.
 
 ## Architecture
 
@@ -146,7 +146,7 @@ Text rendering OR virtual diff -> modal approval -> WorkspaceEdit
 - `local/previewProvider.ts`: read-only virtual documents for native diffs.
 - `local/policy.ts`: pure validation helpers covered by unit tests.
 
-No service container, global singleton graph, background timer, child process, shell, secret store, database, or remote Helix service is required.
+No service container, global singleton graph, background timer, child process, shell, secret store, database, or remote Samsarix service is required.
 
 ## Trust boundaries and data flows
 
@@ -166,7 +166,7 @@ No service container, global singleton graph, background timer, child process, s
 | Chat | Configured Ollama endpoint | System instruction, question, and displayed attached selection (if any) | Explicit Send |
 | Propose edit | Configured Ollama endpoint | Instruction, active file’s workspace-relative path, language, and bounded full content | Explicit Propose edit |
 
-There is no telemetry. Nothing is sent to a Helix-operated endpoint. The extension does not discover, index, or upload the workspace in the background.
+There is no telemetry. Nothing is sent to a Samsarix-operated endpoint. The extension does not discover, index, or upload the workspace in the background.
 
 ### Storage and retention
 
@@ -203,7 +203,7 @@ VS Code extensions execute with the user’s permissions, and the Marketplace ex
 - Requests use `AbortController`; disposal cancels in-flight work. The configured timeout is clamped to 5–120 seconds.
 - Context and files are bounded before serialization. The P0 defaults are intentionally small enough for common local models.
 - Response bodies are rejected when their declared or observed size exceeds the limit.
-- Local model inference has no vendor token charge, but it consumes user CPU/GPU, memory, power, and time. The UI reports request duration; Helix makes no “free” or performance guarantee.
+- Local model inference has no vendor token charge, but it consumes user CPU/GPU, memory, power, and time. The UI reports request duration; Samsarix makes no “free” or performance guarantee.
 - There are no retries in P0, preventing duplicate expensive generations. The user decides when to retry.
 - No logs include prompts, source content, or model output. Errors log only operation, status/category, and timing when an output channel is explicitly opened.
 
@@ -218,10 +218,10 @@ VS Code extensions execute with the user’s permissions, and the Marketplace ex
 | P0 | OAuth URI handling accepted a token without state/PKCE and copied bearer tokens from SecretStorage into plaintext global state. | Remove accounts/OAuth from P0 runtime and package. |
 | P0 | Chat webview used unescaped workspace-derived values in `innerHTML` and had no CSP, enabling workspace-controlled webview injection. | Replace the webview with CSP + text-node rendering and test it. |
 | P0 | Agent edit trusted a backend-supplied file path and could preview/apply outside the workspace; the UI showed only a basename. | Model never supplies a path; controller locks to the captured active file and displays the full relative path. |
-| P0 | `package.json`, README, `LICENSE`, and `LICENSING.md` contradicted one another (Apache-2.0, MIT, and BSL/custom terms). | Use `SEE LICENSE IN LICENSE`; require owner/legal confirmation before publish. Do not invent rights. |
+| P0 | `package.json`, README, `LICENSE`, and `LICENSING.md` contradicted one another (Apache-2.0, MIT, and BSL/custom terms). | Resolved to unmodified MPL-2.0 with Samsarix LLC attribution, an SPDX manifest value, packaged notices, and a separate trademark policy. |
 | P0 | README and publishing docs described Python commands, missing workflows, missing scripts, and a different repository. | Replace with tested instructions and release gates. |
 | P1 | MCP could auto-spawn workspace-configured processes, used a Windows shell, and did not bound non-newline stdout. | Exclude from release; revisit only with a separate threat model and consent flow. |
-| P1 | The old source tree is much larger than the P0 product and contains unreachable `eval`, shell execution, mock data, and stale generated JavaScript. | Compile/package an explicit allowlist; delete historical code in a follow-up after owner review. |
+| P1 | The old source tree was much larger than the P0 product and contained unreachable `eval`, shell execution, mock data, and stale tests/assets. | Completed: compile/package allowlists were verified, then 81 obsolete tracked files were removed from the current tree while Git history preserved them. |
 
 ## Test strategy and release gates
 
@@ -257,7 +257,7 @@ The release is blocked unless:
 - the VSIX contents match the allowlist and contain no source maps, test fixtures, stale webviews, lockfile secrets, `.env` files, or unrelated services;
 - `npm audit --omit=dev` has no high/critical production finding, and dev-only exceptions (if any) are recorded with owner and expiry;
 - the installed VSIX passes the manual core journey;
-- the license and publisher identity are confirmed by the owner.
+- the MPL-2.0 license/notice files are present and the intended Marketplace publisher identity is controlled by the owner.
 
 ## Release and operations plan
 
@@ -268,13 +268,17 @@ The release is blocked unless:
 5. Roll back by unpublishing/deprecating the affected version and publishing a corrected patch; the extension has no server-side kill switch.
 6. Never publish from a developer workstation with an ad-hoc token. Use protected CI environment approval and Microsoft Entra automated publishing when marketplace publication is authorized.
 
-## Owner decisions and blockers
+## Owner decisions and external gates
 
-The implementation may be technically release-ready while publication remains blocked by:
+The owner has confirmed the Samsarix brand, Samsarix LLC company identity, and the `contact@samsarix.com` / `support@samsarix.com` contact channels. The repository now uses unmodified MPL-2.0, identifies Samsarix LLC and contributors in `NOTICE`, and keeps brand permissions separate in `TRADEMARKS.md`.
 
-- **License**: `LICENSE` is a Business Source License variant naming “Helix Licensing System,” while older metadata/docs claim Apache-2.0 and MIT. An authorized owner must confirm the licensed work, change date/terms, copyright, and whether `LICENSING.md` is valid.
-- **Publisher and repository**: confirm control of the `samsara-helix` Marketplace publisher and the canonical public repository. The previous manifest mixed `helix-collective/helix-unified` and `Deathcharge/helix-vscode-extension`.
-- **Brand and icon rights**: confirm the Helix name and supplied icon may be distributed.
-- **Privacy/legal review**: approve the local/remote endpoint disclosure and remote-endpoint opt-in before enabling any non-loopback support.
+Public Marketplace publication remains blocked by:
 
-No implementation change can safely decide those legal or ownership questions. Marketplace publication must remain a deliberate owner action, never part of this productization run.
+- **Publisher**: create or confirm control of the exact `samsarix` Visual Studio Marketplace publisher declared by the manifest.
+- **Repository identity**: the canonical GitHub repository is still `Deathcharge/helix-vscode-extension`. If it is renamed or moved, update the manifest URLs and verify redirects before packaging.
+- **Icon provenance**: confirm that Samsarix LLC owns or has distribution rights to the supplied `icon.png`; replace it before publication if that cannot be documented.
+- **Copyright chain**: confirm that Samsarix LLC owns or has assignments for the copyrights it claims. Repository history is overwhelmingly owner-authored but includes automation identities.
+- **Privacy/legal review**: approve the local/remote endpoint disclosure and remote-endpoint opt-in before enabling non-loopback support in a public release.
+- **Human acceptance**: install the exact hashed VSIX in a clean Extension Development Host with a chat-capable Ollama model and complete the manual matrix above.
+
+Marketplace publication must remain a deliberate owner action. None of these gates requires an undocumented legacy or Samsarix-hosted service.

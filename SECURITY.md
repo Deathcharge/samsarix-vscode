@@ -6,7 +6,7 @@ Until a public release is authorized, only the latest commit on the active produ
 
 ## Reporting a vulnerability
 
-Use GitHub’s private security-advisory flow for the canonical repository owner. If private reporting is unavailable, open a minimal issue requesting a secure contact without posting exploit details, prompts, source code, tokens, private endpoint URLs, or user data.
+Use GitHub’s private security-advisory flow for the canonical repository owner or email [support@samsarix.com](mailto:support@samsarix.com). Do not post exploit details, prompts, source code, tokens, private endpoint URLs, or user data in a public issue.
 
 Include the affected version/commit, OS and local/remote VS Code host type, prerequisite configuration, impact, and the smallest safe reproduction. Maintainers should acknowledge within five business days and provide a remediation/status update within ten business days when ownership is available.
 

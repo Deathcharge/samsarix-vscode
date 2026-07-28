@@ -1,6 +1,6 @@
 # Contributing
 
-Helix accepts focused changes that preserve the local, explicit-context, review-before-apply product contract in [docs/PRODUCTIZATION.md](docs/PRODUCTIZATION.md).
+Samsarix accepts focused changes that preserve the local, explicit-context, review-before-apply product contract in [docs/PRODUCTIZATION.md](docs/PRODUCTIZATION.md).
 
 ## Before opening a pull request
 

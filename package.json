@@ -1,10 +1,14 @@
 {
-  "name": "helix-vscode-extension",
-  "displayName": "Helix — Local Review-First AI",
+  "name": "samsarix-vscode",
+  "displayName": "Samsarix — Local Review-First AI",
   "description": "Ask a local Ollama model about explicit code selections and review one-file edits before applying them.",
   "version": "1.0.0",
-  "publisher": "samsara-helix",
-  "license": "SEE LICENSE IN LICENSE",
+  "publisher": "samsarix",
+  "license": "MPL-2.0",
+  "author": {
+    "name": "Samsarix LLC",
+    "email": "contact@samsarix.com"
+  },
   "icon": "icon.png",
   "main": "./out/extension.js",
   "engines": {
@@ -15,6 +19,7 @@
     "Other"
   ],
   "keywords": [
+    "samsarix",
     "ollama",
     "local ai",
     "code review",
@@ -33,23 +38,23 @@
     "url": "https://github.com/Deathcharge/helix-vscode-extension/issues"
   },
   "activationEvents": [
-    "onView:helix.chatPanel",
-    "onCommand:helix.openChat",
-    "onCommand:helix.configureOllama",
-    "onCommand:helix.testConnection",
-    "onCommand:helix.addSelection",
-    "onCommand:helix.runAgentEdit",
-    "onCommand:helix.revertLastEdit",
-    "onCommand:helix.showPrivacy"
+    "onView:samsarix.chatPanel",
+    "onCommand:samsarix.openChat",
+    "onCommand:samsarix.configureOllama",
+    "onCommand:samsarix.testConnection",
+    "onCommand:samsarix.addSelection",
+    "onCommand:samsarix.runAgentEdit",
+    "onCommand:samsarix.revertLastEdit",
+    "onCommand:samsarix.showPrivacy"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": "limited",
       "description": "Chat without workspace context is available. Attaching code and editing files require Workspace Trust.",
       "restrictedConfigurations": [
-        "helix.ollama.endpoint",
-        "helix.ollama.model",
-        "helix.ollama.allowRemoteEndpoint"
+        "samsarix.ollama.endpoint",
+        "samsarix.ollama.model",
+        "samsarix.ollama.allowRemoteEndpoint"
       ]
     },
     "virtualWorkspaces": false
@@ -57,55 +62,55 @@
   "contributes": {
     "commands": [
       {
-        "command": "helix.openChat",
+        "command": "samsarix.openChat",
         "title": "Open Local Chat",
-        "category": "Helix"
+        "category": "Samsarix"
       },
       {
-        "command": "helix.configureOllama",
+        "command": "samsarix.configureOllama",
         "title": "Configure Ollama",
-        "category": "Helix"
+        "category": "Samsarix"
       },
       {
-        "command": "helix.testConnection",
+        "command": "samsarix.testConnection",
         "title": "Test Ollama Connection",
-        "category": "Helix"
+        "category": "Samsarix"
       },
       {
-        "command": "helix.addSelection",
+        "command": "samsarix.addSelection",
         "title": "Add Editor Selection to Local Chat",
-        "category": "Helix"
+        "category": "Samsarix"
       },
       {
-        "command": "helix.runAgentEdit",
+        "command": "samsarix.runAgentEdit",
         "title": "Propose Edit to Active File…",
-        "category": "Helix"
+        "category": "Samsarix"
       },
       {
-        "command": "helix.revertLastEdit",
+        "command": "samsarix.revertLastEdit",
         "title": "Revert Last Applied Edit",
-        "category": "Helix"
+        "category": "Samsarix"
       },
       {
-        "command": "helix.showPrivacy",
+        "command": "samsarix.showPrivacy",
         "title": "Show Data & Privacy Details",
-        "category": "Helix"
+        "category": "Samsarix"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "helix-sidebar",
-          "title": "Helix",
+          "id": "samsarix-sidebar",
+          "title": "Samsarix",
           "icon": "icon.png"
         }
       ]
     },
     "views": {
-      "helix-sidebar": [
+      "samsarix-sidebar": [
         {
           "type": "webview",
-          "id": "helix.chatPanel",
+          "id": "samsarix.chatPanel",
           "name": "Local Assistant"
         }
       ]
@@ -113,66 +118,59 @@
     "menus": {
       "view/title": [
         {
-          "command": "helix.configureOllama",
-          "when": "view == helix.chatPanel",
+          "command": "samsarix.configureOllama",
+          "when": "view == samsarix.chatPanel",
           "group": "navigation@1"
         },
         {
-          "command": "helix.testConnection",
-          "when": "view == helix.chatPanel",
+          "command": "samsarix.testConnection",
+          "when": "view == samsarix.chatPanel",
           "group": "navigation@2"
         }
       ],
       "editor/context": [
         {
-          "command": "helix.addSelection",
+          "command": "samsarix.addSelection",
           "when": "editorHasSelection && isWorkspaceTrusted",
-          "group": "helix@1"
+          "group": "samsarix@1"
         },
         {
-          "command": "helix.runAgentEdit",
+          "command": "samsarix.runAgentEdit",
           "when": "resourceScheme == file && isWorkspaceTrusted",
-          "group": "helix@2"
+          "group": "samsarix@2"
         }
       ]
     },
-    "keybindings": [
-      {
-        "command": "helix.openChat",
-        "key": "ctrl+shift+h",
-        "mac": "cmd+shift+h"
-      }
-    ],
     "configuration": {
-      "title": "Helix",
+      "title": "Samsarix",
       "properties": {
-        "helix.ollama.endpoint": {
+        "samsarix.ollama.endpoint": {
           "type": "string",
           "default": "http://127.0.0.1:11434",
           "scope": "machine",
-          "description": "Ollama origin. Loopback HTTP is allowed; remote endpoints require HTTPS and the explicit opt-in below. Helix sends requests only after a user action."
+          "description": "Ollama origin. Loopback HTTP is allowed; remote endpoints require HTTPS and the explicit opt-in below. Samsarix sends requests only after a user action."
         },
-        "helix.ollama.model": {
+        "samsarix.ollama.model": {
           "type": "string",
           "default": "qwen2.5-coder:7b",
           "scope": "machine",
           "description": "Installed Ollama model used for chat and edit proposals."
         },
-        "helix.ollama.allowRemoteEndpoint": {
+        "samsarix.ollama.allowRemoteEndpoint": {
           "type": "boolean",
           "default": false,
           "scope": "machine",
           "description": "Allow an HTTPS Ollama endpoint that is not loopback. Enabling this can send prompts and explicitly attached source code across the network."
         },
-        "helix.requestTimeoutSeconds": {
+        "samsarix.requestTimeoutSeconds": {
           "type": "number",
           "default": 60,
           "minimum": 5,
           "maximum": 120,
           "scope": "machine",
-          "description": "Maximum time for an Ollama request before Helix cancels it."
+          "description": "Maximum time for an Ollama request before Samsarix cancels it."
         },
-        "helix.maxContextCharacters": {
+        "samsarix.maxContextCharacters": {
           "type": "number",
           "default": 60000,
           "minimum": 1000,
@@ -191,7 +189,7 @@
     "lint": "eslint src/extension.ts src/local/**/*.ts",
     "test": "jest --coverage",
     "prepackage": "npm run compile",
-    "package": "vsce package --out dist/helix-vscode-extension-1.0.0.vsix && node scripts/normalize-vsix.mjs",
+    "package": "vsce package --out dist/samsarix-vscode-1.0.0.vsix && node scripts/normalize-vsix.mjs",
     "inspect:package": "node scripts/inspect-package.mjs",
     "audit:prod": "npm audit --omit=dev --audit-level=high",
     "check": "npm run lint && npm run typecheck && npm test -- --runInBand && npm run package && npm run inspect:package"

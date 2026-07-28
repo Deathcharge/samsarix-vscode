@@ -5,7 +5,7 @@ export const DEFAULT_ENDPOINT = 'http://127.0.0.1:11434';
 export const DEFAULT_MODEL = 'qwen2.5-coder:7b';
 
 export function readLocalConfiguration(): LocalConfiguration {
-  const config = vscode.workspace.getConfiguration('helix');
+  const config = vscode.workspace.getConfiguration('samsarix');
 
   return {
     endpoint: readGlobal(config, 'ollama.endpoint', DEFAULT_ENDPOINT),
@@ -31,7 +31,7 @@ export async function updateGlobalConfiguration<T>(
   value: T
 ): Promise<void> {
   await vscode.workspace
-    .getConfiguration('helix')
+    .getConfiguration('samsarix')
     .update(key, value, vscode.ConfigurationTarget.Global);
 }
 

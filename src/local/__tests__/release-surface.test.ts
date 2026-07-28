@@ -25,7 +25,7 @@ describe('release surface security invariants', () => {
     expect(provider).toContain("frame-ancestors 'none'");
   });
 
-  test('manifest contributes only registered Helix commands', () => {
+  test('manifest contributes only registered Samsarix commands', () => {
     const manifest = JSON.parse(
       readFileSync(path.join(workspace, 'package.json'), 'utf8')
     );
@@ -41,6 +41,31 @@ describe('release surface security invariants', () => {
     );
 
     expect(new Set(registered)).toEqual(new Set(contributed));
+  });
+
+  test('manifest exposes one coherent Samsarix identity', () => {
+    const manifest = JSON.parse(
+      readFileSync(path.join(workspace, 'package.json'), 'utf8')
+    );
+
+    expect(manifest.name).toBe('samsarix-vscode');
+    expect(manifest.publisher).toBe('samsarix');
+    expect(manifest.license).toBe('MPL-2.0');
+    expect(manifest.author).toEqual({
+      name: 'Samsarix LLC',
+      email: 'contact@samsarix.com',
+    });
+    expect(manifest.activationEvents).toEqual(
+      expect.arrayContaining([
+        'onView:samsarix.chatPanel',
+        'onCommand:samsarix.openChat',
+      ])
+    );
+    expect(
+      Object.keys(manifest.contributes.configuration.properties).every(key =>
+        key.startsWith('samsarix.')
+      )
+    ).toBe(true);
   });
 
   test('release entrypoint contains no hosted-service or process execution path', () => {

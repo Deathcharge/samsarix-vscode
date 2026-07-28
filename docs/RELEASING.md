@@ -1,6 +1,6 @@
 # Releasing
 
-Public publication is not authorized by repository access alone. Confirm every owner decision in [Productization](PRODUCTIZATION.md#owner-decisions-and-blockers), especially the contradictory license text, Marketplace publisher control, canonical repository, brand, and icon rights.
+Public publication is not authorized by repository access alone. Confirm every external gate in [Productization](PRODUCTIZATION.md#owner-decisions-and-external-gates), especially Marketplace publisher control, the canonical repository URL, icon rights, and human acceptance of the exact artifact.
 
 ## Technical gates
 
@@ -15,7 +15,7 @@ Public publication is not authorized by repository access alone. Confirm every o
 
 Publish first as a pre-release through a protected CI environment with a human approval. Do not publish from a workstation or store a Marketplace token in the repository. Microsoft’s current guidance retires global Azure DevOps PATs on December 1, 2026; use Microsoft Entra automated publishing when owner authorization exists.
 
-Promote only the exact tested version. Helix has no telemetry or server-side kill switch, so monitor Marketplace install errors and public issue reports.
+Promote only the exact tested version. Samsarix has no telemetry or server-side kill switch, so monitor Marketplace install errors and public issue reports.
 
 ## Rollback
 

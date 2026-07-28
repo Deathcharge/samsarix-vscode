@@ -53,7 +53,7 @@ export function normalizeEndpoint(raw: string, allowRemote: boolean): string {
   const loopback = isLoopbackHostname(url.hostname);
   if (!loopback && !allowRemote) {
     throw new Error(
-      'Remote endpoints are disabled. Enable “Helix: Ollama › Allow Remote Endpoint” in User Settings after reviewing the privacy impact.'
+      'Remote endpoints are disabled. Enable “Samsarix: Ollama › Allow Remote Endpoint” in User Settings after reviewing the privacy impact.'
     );
   }
   if (!loopback && url.protocol !== 'https:') {
@@ -116,7 +116,7 @@ export function parseEditProposal(raw: string): EditProposal {
     throw new Error('The model returned unsupported edit fields.');
   }
   if (typeof parsed.content !== 'string' || parsed.content.length === 0) {
-    throw new Error('The model returned an empty edit. Helix will not erase a file.');
+    throw new Error('The model returned an empty edit. Samsarix will not erase a file.');
   }
   if (parsed.content.length > MAX_EDIT_CHARACTERS) {
     throw new Error(`The proposed file exceeds the ${MAX_EDIT_CHARACTERS.toLocaleString()} character safety limit.`);

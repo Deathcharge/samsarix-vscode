@@ -2,10 +2,12 @@
 
 ## 1.0.0 — unreleased productization candidate
 
-- Reframed Helix as an independent local-Ollama, review-first code assistant.
+- Reframed Samsarix as an independent local-Ollama, review-first code assistant.
 - Removed hosted API, authentication, subscription, marketplace, agent polling, WebSocket, MCP, browser, terminal, mock dashboard, and passive inline-completion surfaces from the release runtime.
 - Added explicit selection context, bounded chat requests, one-file structured edit proposals, native diff approval, stale-document protection, and in-memory revert.
 - Added loopback-by-default endpoint policy, Workspace Trust enforcement, restrictive webview CSP, text-only rendering, request timeouts, and response bounds.
 - Replaced inaccurate product/setup/publishing documentation and added deterministic CI and VSIX content inspection.
+- Renamed the product and extension identity to Samsarix, owned by Samsarix LLC.
+- Replaced contradictory custom licensing terms with the standard Mozilla Public License 2.0, attribution notice, and trademark policy.
 
-Publication remains blocked on owner confirmation of licensing, publisher/repository ownership, brand, and icon rights.
+Marketplace publication remains gated on control of the `samsarix` publisher, icon confirmation, and the documented human acceptance run.

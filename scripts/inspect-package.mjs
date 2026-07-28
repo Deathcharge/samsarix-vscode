@@ -17,7 +17,7 @@ const vsixPath = path.join(dist, vsixFiles[0]);
 const allowed = [
   /^\[Content_Types\]\.xml$/,
   /^extension\.vsixmanifest$/,
-  /^extension\/(package\.json|readme\.md|changelog\.md|license(?:\.txt)?|icon\.png)$/i,
+  /^extension\/(package\.json|readme\.md|changelog\.md|license(?:\.txt)?|notice|trademarks\.md|icon\.png)$/i,
   /^extension\/assets\/chat\.(css|js)$/,
   /^extension\/out\/extension\.js$/,
   /^extension\/out\/local\/(ChatViewProvider|EditController|OllamaClient|PreviewProvider|configuration|policy)\.js$/,
@@ -26,6 +26,9 @@ const required = [
   'extension/package.json',
   'extension/readme.md',
   'extension/changelog.md',
+  'extension/license.txt',
+  'extension/notice',
+  'extension/trademarks.md',
   'extension/icon.png',
   'extension/assets/chat.css',
   'extension/assets/chat.js',
@@ -75,6 +78,25 @@ for (const entry of entries) {
 
 const packageJsonEntry = entries.find(entry => entry.name === 'extension/package.json');
 const manifest = JSON.parse(packageJsonEntry.content.toString('utf8'));
+if (
+  manifest.name !== 'samsarix-vscode' ||
+  manifest.publisher !== 'samsarix' ||
+  manifest.license !== 'MPL-2.0' ||
+  manifest.author?.name !== 'Samsarix LLC' ||
+  manifest.author?.email !== 'contact@samsarix.com'
+) {
+  throw new Error('Release manifest contains an unexpected product or legal identity.');
+}
+if (
+  !manifest.contributes.commands.every(entry =>
+    entry.command.startsWith('samsarix.')
+  ) ||
+  !Object.keys(manifest.contributes.configuration.properties).every(key =>
+    key.startsWith('samsarix.')
+  )
+) {
+  throw new Error('Release manifest contains a non-Samsarix command or setting.');
+}
 if (manifest.dependencies && Object.keys(manifest.dependencies).length > 0) {
   throw new Error('Release manifest unexpectedly contains production dependencies.');
 }

@@ -1,6 +1,6 @@
 # Getting started
 
-Helix requires VS Code 1.85+, Ollama, and one installed model. It does not require a Helix backend or account.
+Samsarix requires VS Code 1.85+, Ollama, and one installed model. It does not require a Samsarix backend or account.
 
 ```bash
 ollama pull qwen2.5-coder:7b
@@ -11,10 +11,10 @@ Install a locally verified package:
 ```bash
 npm ci
 npm run check
-code --install-extension dist/helix-vscode-extension-1.0.0.vsix
+code --install-extension dist/samsarix-vscode-1.0.0.vsix
 ```
 
-Open **Helix: Open Local Chat**, choose **Configure**, confirm the Ollama origin, and select an installed model. No network request happens before a Configure, Test, Send, or Propose-edit action.
+Open **Samsarix: Open Local Chat**, choose **Configure**, confirm the Ollama origin, and select an installed model. No network request happens before a Configure, Test, Send, or Propose-edit action.
 
 For code context, select text and choose **Add editor selection**. Verify the displayed relative path, lines, and size before Send.
 

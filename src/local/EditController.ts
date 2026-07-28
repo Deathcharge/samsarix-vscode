@@ -61,7 +61,7 @@ export class EditController implements vscode.Disposable {
       instruction ??
       (await vscode.window.showInputBox({
         title: `Propose an edit to ${captured.relativePath}`,
-        prompt: 'Describe one bounded change. Helix will show a diff before writing.',
+        prompt: 'Describe one bounded change. Samsarix will show a diff before writing.',
         placeHolder: 'Example: handle an empty input without changing the public API',
         ignoreFocusOut: true,
         validateInput: value =>
@@ -107,15 +107,15 @@ export class EditController implements vscode.Disposable {
         'vscode.diff',
         captured.uri,
         previewUri,
-        `Helix proposal — ${captured.relativePath}`,
+        `Samsarix proposal — ${captured.relativePath}`,
         { preview: true }
       );
 
       const decision = await vscode.window.showInformationMessage(
-        `Apply the Helix proposal to ${captured.relativePath}?`,
+        `Apply the Samsarix proposal to ${captured.relativePath}?`,
         {
           modal: true,
-          detail: `${generation.value.summary}\n\nReview the open diff. Helix will change only this file and will not save it automatically.`,
+          detail: `${generation.value.summary}\n\nReview the open diff. Samsarix will change only this file and will not save it automatically.`,
         },
         'Apply',
         'Reject'
@@ -166,7 +166,7 @@ export class EditController implements vscode.Disposable {
 
       return {
         status: 'applied',
-        message: `Applied to ${captured.relativePath}. The buffer is unsaved; use “Helix: Revert Last Applied Edit” during this session if needed.`,
+        message: `Applied to ${captured.relativePath}. The buffer is unsaved; use “Samsarix: Revert Last Applied Edit” during this session if needed.`,
         durationMs: generation.durationMs,
       };
     } finally {
@@ -179,7 +179,7 @@ export class EditController implements vscode.Disposable {
     const snapshot = this.lastApplied;
     if (!snapshot) {
       void vscode.window.showInformationMessage(
-        'There is no Helix edit to revert in this session.'
+        'There is no Samsarix edit to revert in this session.'
       );
       return false;
     }
@@ -195,12 +195,12 @@ export class EditController implements vscode.Disposable {
       document.getText() !== snapshot.after
     ) {
       throw new Error(
-        `Helix cannot safely revert ${snapshot.relativePath} because it changed after the edit.`
+        `Samsarix cannot safely revert ${snapshot.relativePath} because it changed after the edit.`
       );
     }
 
     const decision = await vscode.window.showWarningMessage(
-      `Revert the last Helix edit to ${snapshot.relativePath}?`,
+      `Revert the last Samsarix edit to ${snapshot.relativePath}?`,
       { modal: true, detail: 'This restores the exact in-memory pre-edit content.' },
       'Revert'
     );
@@ -221,7 +221,7 @@ export class EditController implements vscode.Disposable {
 
     this.lastApplied = undefined;
     void vscode.window.showInformationMessage(
-      `Reverted the Helix edit to ${snapshot.relativePath}. The buffer is unsaved.`
+      `Reverted the Samsarix edit to ${snapshot.relativePath}. The buffer is unsaved.`
     );
     return true;
   }
@@ -242,7 +242,7 @@ async function captureEditableDocument(document: vscode.TextDocument): Promise<{
   content: string;
 }> {
   if (document.uri.scheme !== 'file' || document.isUntitled) {
-    throw new Error('Helix edits only saved local files in an open workspace.');
+    throw new Error('Samsarix edits only saved local files in an open workspace.');
   }
 
   const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);

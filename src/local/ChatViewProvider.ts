@@ -27,7 +27,7 @@ type ConnectionState = 'untested' | 'testing' | 'connected' | 'error';
 export class ChatViewProvider
   implements vscode.WebviewViewProvider, vscode.Disposable
 {
-  public static readonly viewType = 'helix.chatPanel';
+  public static readonly viewType = 'samsarix.chatPanel';
 
   private view: vscode.WebviewView | undefined;
   private context: AttachedContext | undefined;
@@ -35,7 +35,7 @@ export class ChatViewProvider
   private busy = false;
   private connection: ConnectionState = 'untested';
   private notice =
-    'Helix makes no network request until you choose Test, Send, or Propose edit.';
+    'Samsarix makes no network request until you choose Test, Send, or Propose edit.';
   private activeAbort: AbortController | undefined;
   private readonly disposables: vscode.Disposable[] = [];
 
@@ -65,7 +65,7 @@ export class ChatViewProvider
 
   public async addActiveSelection(): Promise<void> {
     if (this.busy) {
-      throw new Error('Wait for the current Helix request to finish.');
+      throw new Error('Wait for the current Samsarix request to finish.');
     }
     if (!vscode.workspace.isTrusted) {
       throw new Error('Trust this workspace before attaching source code.');
@@ -112,7 +112,7 @@ export class ChatViewProvider
 
   public async testConnection(): Promise<void> {
     if (this.busy) {
-      throw new Error('Wait for the current Helix request to finish.');
+      throw new Error('Wait for the current Samsarix request to finish.');
     }
     this.busy = true;
     this.connection = 'testing';
@@ -158,7 +158,7 @@ export class ChatViewProvider
   private async handleMessage(message: unknown): Promise<void> {
     try {
       if (!isRecord(message) || typeof message.type !== 'string') {
-        throw new Error('Helix ignored an invalid panel message.');
+        throw new Error('Samsarix ignored an invalid panel message.');
       }
 
       switch (message.type) {
@@ -166,7 +166,7 @@ export class ChatViewProvider
           await this.postState();
           return;
         case 'configure':
-          await vscode.commands.executeCommand('helix.configureOllama');
+          await vscode.commands.executeCommand('samsarix.configureOllama');
           return;
         case 'test':
           await this.testConnection();
@@ -197,7 +197,7 @@ export class ChatViewProvider
           await this.proposeEdit(message.text);
           return;
         default:
-          throw new Error('Helix ignored an unsupported panel action.');
+          throw new Error('Samsarix ignored an unsupported panel action.');
       }
     } catch (error) {
       this.notice = toMessage(error);
@@ -206,14 +206,14 @@ export class ChatViewProvider
         this.notice = 'Request cancelled.';
         await this.postState();
       } else {
-        void vscode.window.showErrorMessage(`Helix: ${this.notice}`);
+        void vscode.window.showErrorMessage(`Samsarix: ${this.notice}`);
       }
     }
   }
 
   private async send(rawQuestion: unknown): Promise<void> {
     if (this.busy) {
-      throw new Error('Wait for the current Helix request to finish.');
+      throw new Error('Wait for the current Samsarix request to finish.');
     }
     const question = assertBoundedText(
       rawQuestion,
@@ -261,7 +261,7 @@ export class ChatViewProvider
       MAX_QUESTION_CHARACTERS
     );
     if (this.busy) {
-      throw new Error('Wait for the current Helix request to finish.');
+      throw new Error('Wait for the current Samsarix request to finish.');
     }
 
     this.busy = true;
@@ -338,12 +338,12 @@ export class ChatViewProvider
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="${csp}">
   <link rel="stylesheet" href="${styleUri}">
-  <title>Helix local assistant</title>
+  <title>Samsarix local assistant</title>
 </head>
 <body>
   <header>
     <div>
-      <h1>Helix</h1>
+      <h1>Samsarix</h1>
       <p class="eyebrow">Local, review-first coding companion</p>
     </div>
     <span id="connection" class="badge">Not tested</span>
@@ -372,7 +372,7 @@ export class ChatViewProvider
 
   <main id="messages" aria-label="Chat messages" aria-live="polite"></main>
 
-  <section class="composer" aria-label="Ask Helix">
+  <section class="composer" aria-label="Ask Samsarix">
     <label for="prompt">Question or one-file edit instruction</label>
     <textarea id="prompt" maxlength="${MAX_QUESTION_CHARACTERS}" rows="5" placeholder="Ask about code, or describe one edit to the active file"></textarea>
     <div class="button-row wrap">
