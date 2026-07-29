@@ -31,11 +31,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Deathcharge/helix-vscode-extension.git"
+    "url": "https://github.com/Deathcharge/samsarix-vscode.git"
   },
-  "homepage": "https://github.com/Deathcharge/helix-vscode-extension#readme",
+  "homepage": "https://github.com/Deathcharge/samsarix-vscode#readme",
   "bugs": {
-    "url": "https://github.com/Deathcharge/helix-vscode-extension/issues"
+    "url": "https://github.com/Deathcharge/samsarix-vscode/issues"
   },
   "activationEvents": [
     "onView:samsarix.chatPanel",

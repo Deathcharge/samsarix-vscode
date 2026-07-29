@@ -277,7 +277,7 @@ The legacy double-helix icon was replaced with a new project-created S/X mark th
 Public Marketplace publication remains blocked by:
 
 - **Publisher**: create or confirm control of the exact `samsarix` Visual Studio Marketplace publisher declared by the manifest.
-- **Repository identity**: the canonical GitHub repository is still `Deathcharge/helix-vscode-extension`. If it is renamed or moved, update the manifest URLs and verify redirects before packaging.
+- **Repository identity (complete)**: the canonical repository and manifest URLs use `Deathcharge/samsarix-vscode`; the post-rename VSIX contents check passes.
 - **Brand clearance**: perform a professional trademark search for the Samsarix name and the new S/X mark, document provenance, and decide whether to pursue registration before a broad public launch.
 - **Copyright chain**: confirm that Samsarix LLC owns or has assignments for the copyrights it claims. Repository history is overwhelmingly owner-authored but includes automation identities.
 - **Privacy/legal review**: approve the local/remote endpoint disclosure and remote-endpoint opt-in before enabling non-loopback support in a public release.
