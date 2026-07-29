@@ -1,93 +1,141 @@
-# helix-vscode-extension
+# Samsarix — local, review-first AI for VS Code
 
-VS Code extension for Helix development
+Samsarix is a small VS Code coding companion for developers who run [Ollama](https://ollama.com). It answers questions about code you explicitly attach and can propose one complete edit to the active file. Every write waits for your approval in a native VS Code diff.
 
-## 🎯 Overview
+This repository is independent: it needs no Samsarix account, subscription, hosted API, marketplace, or companion repository.
 
-This repository is part of the [Helix Collective](https://github.com/Deathcharge/helix-platform), a comprehensive ecosystem for building intelligent, multi-agent systems with consciousness frameworks and advanced LLM integration.
+> Release status: this is a verified release candidate. Public Marketplace publication still requires control of the `samsarix` publisher, brand/trademark clearance, and a human acceptance run with a chat-capable Ollama model. See [the productization record](docs/PRODUCTIZATION.md#owner-decisions-and-external-gates).
 
-## 🚀 Quick Start
+## What it does
 
-### Installation
+- Local Ollama chat with a visible endpoint and model.
+- Optional editor-selection context with filename, line range, and size shown before Send.
+- One-file edit proposals for the active workspace file.
+- Native diff review, explicit Apply/Reject, stale-file protection, and session-scoped revert.
+- No activation network request, telemetry, passive completion, shell execution, or account.
 
-\`\`\`bash
-git clone https://github.com/Deathcharge/helix-vscode-extension.git
-cd helix-vscode-extension
-pip install -r requirements.txt
-\`\`\`
+What it deliberately does not do: autonomous terminal/browser work, repository indexing, background context collection, multi-file agents, MCP, cloud inference, auth, subscriptions, or a marketplace.
 
-### Basic Usage
+## Prerequisites
 
-See the [examples/](examples/) directory for working examples and integration patterns.
+- VS Code 1.85 or later.
+- Ollama reachable from the VS Code extension host.
+- At least one installed model, for example:
 
-## 📚 Documentation
+```bash
+ollama pull qwen2.5-coder:7b
+```
 
-- **[Architecture](docs/ARCHITECTURE.md)** - System design and components
-- **[API Reference](docs/API.md)** - Complete API documentation
-- **[Integration Guide](docs/INTEGRATION.md)** - How to integrate with other Helix repos
-- **[Deployment](docs/DEPLOYMENT.md)** - Production deployment guide
-- **[Contributing](CONTRIBUTING.md)** - How to contribute
+Samsarix runs as a workspace extension. In Remote Development, `127.0.0.1` refers to the remote extension host, so Ollama normally needs to run there.
 
-## 🔗 Related Repositories
+## Install from a verified VSIX
 
-- **[helix-platform](https://github.com/Deathcharge/helix-platform)** - Central hub and integration guide
-- **[helix-unified](https://github.com/Deathcharge/helix-unified)** - Main unified codebase
-- **[helix-core](https://github.com/Deathcharge/helix-core)** - Core utilities and LLM integration
+From a clean checkout:
 
-See [HELIX_REPOSITORY_INDEX.md](https://github.com/Deathcharge/helix-platform/blob/main/HELIX_REPOSITORY_INDEX.md) for the complete ecosystem map.
+```bash
+npm ci
+npm run check
+code --install-extension dist/samsarix-vscode-1.0.0.vsix
+```
 
-## 🧪 Testing
+`npm run check` lints, type-checks, tests, packages, normalizes the archive for reproducible hashing, inspects every VSIX entry against an allowlist, and writes adjacent `.sha256` and `.contents.txt` evidence files.
 
-Run tests with pytest:
+## First run
 
-\`\`\`bash
-pytest tests/ -v --cov=src
-\`\`\`
+1. Open the Samsarix activity-bar view or run **Samsarix: Open Local Chat**.
+2. Choose **Configure**. Samsarix asks for the Ollama origin, fetches `/api/tags` only after that action, and lets you choose an installed model.
+3. Choose **Test**. A failed connection explains which endpoint could not be reached; zero installed models gives the exact `ollama pull` next step.
+4. Enter a question and choose **Send**.
 
-## 🔄 CI/CD
+The default endpoint is `http://127.0.0.1:11434`; the default model name is `qwen2.5-coder:7b`. Samsarix does not download or start models.
 
-This repository uses GitHub Actions for:
-- ✅ Automated testing (Python 3.9, 3.10, 3.11)
-- ✅ Code linting (flake8)
-- ✅ Type checking (mypy)
-- ✅ Security scanning (bandit, safety)
-- ✅ Coverage reporting (Codecov)
+## Ask about selected code
 
-See [.github/workflows/ci.yml](.github/workflows/ci.yml) for details.
+1. Select the exact text in an editor.
+2. Choose **Add editor selection** in the panel, use the editor context menu, or run **Samsarix: Add Editor Selection to Local Chat**.
+3. Verify the displayed workspace-relative path, line range, and character count.
+4. Enter a question and choose **Send**.
 
-## 📋 Requirements
+The attachment remains in memory until you clear it or the extension session ends. Samsarix sends no other file or workspace data.
 
-- Python 3.9+
-- Dependencies listed in requirements.txt
-- Development dependencies in requirements-dev.txt
+## Propose a one-file edit
 
-## 🤝 Contributing
+1. Open a saved local file inside a trusted workspace.
+2. Describe one change in the Samsarix prompt and choose **Propose edit**, or run **Samsarix: Propose Edit to Active File…**.
+3. Review the native diff. The title shows the complete workspace-relative target path.
+4. Choose **Apply** or **Reject** in the modal. Reject writes nothing.
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
-- Development setup
-- Code style guide
-- Testing requirements
-- Pull request process
+Apply changes the editor buffer but does not save it. **Samsarix: Revert Last Applied Edit** restores the exact pre-edit buffer while VS Code remains open, unless the file has changed again. Git remains the durable rollback mechanism.
 
-## 📄 License
+Samsarix refuses edits when the workspace is untrusted, the target is untitled/non-file/outside the workspace (including a symlink escape), the file is empty/binary/oversized, or the document changes during generation.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Commands
 
-## 🆘 Support
+| Command | Behavior |
+| --- | --- |
+| Samsarix: Open Local Chat | Opens the local assistant sidebar. |
+| Samsarix: Configure Ollama | Tests a user-entered origin and selects an installed model. |
+| Samsarix: Test Ollama Connection | Fetches `/api/tags` after the command is invoked. |
+| Samsarix: Add Editor Selection to Local Chat | Attaches only the current selection. |
+| Samsarix: Propose Edit to Active File… | Generates one whole-file proposal and opens a diff. |
+| Samsarix: Revert Last Applied Edit | Restores the in-memory snapshot when it is still safe. |
+| Samsarix: Show Data & Privacy Details | Opens this document. |
 
-- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/Deathcharge/helix-vscode-extension/issues)
-- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/Deathcharge/helix-vscode-extension/discussions)
-- **Documentation**: See the [docs/](docs/) directory
-- **Ecosystem**: Visit [helix-platform](https://github.com/Deathcharge/helix-platform)
+## Settings
 
-## 🎓 Learn More
+All settings use machine/user scope; commands write global values. Workspace settings cannot silently redirect code.
 
-- [Helix Collective Repository Index](https://github.com/Deathcharge/helix-platform/blob/main/HELIX_REPOSITORY_INDEX.md)
-- [Architecture Guide](https://github.com/Deathcharge/helix-platform/blob/main/docs/ARCHITECTURE.md)
-- [Integration Examples](https://github.com/Deathcharge/helix-platform/tree/main/examples)
+| Setting | Default | Notes |
+| --- | --- | --- |
+| `samsarix.ollama.endpoint` | `http://127.0.0.1:11434` | Origin only; URLs with credentials, paths, queries, or fragments are rejected. |
+| `samsarix.ollama.model` | `qwen2.5-coder:7b` | Must be installed in Ollama. |
+| `samsarix.ollama.allowRemoteEndpoint` | `false` | Remote endpoints require this opt-in and HTTPS. |
+| `samsarix.requestTimeoutSeconds` | `60` | Runtime-clamped to 5–120 seconds. |
+| `samsarix.maxContextCharacters` | `60000` | Runtime-clamped to 1,000–100,000 characters. |
 
----
+## Data, privacy, and cost
 
-**Status**: ✅ Production Ready  
-**Last Updated**: June 19, 2026  
-**Maintainer**: Helix Collective Contributors
+Samsarix has no telemetry and no Samsarix-operated backend.
+
+- **Configure/Test** sends only `GET /api/tags` to the displayed endpoint.
+- **Send** sends the prompt and the displayed selection, if attached, to `/api/chat`.
+- **Propose edit** sends the instruction, active file’s relative path/language, and bounded complete content to `/api/chat`.
+- Chat, attachment, and the last edit snapshot are memory-only. Settings persist through VS Code.
+- Prompt/source/model output is not logged.
+
+Loopback Ollama traffic remains on the extension host. If you enable a remote endpoint, prompts and explicitly shared code cross the network to infrastructure you control; Samsarix does not implement authentication in this release. Remote use needs its own transport and access controls.
+
+Ollama inference has no Samsarix token fee, but it uses your compute, memory, power, and time. Samsarix shows generation duration and does not retry automatically.
+
+See [Privacy](docs/PRIVACY.md), [Architecture](docs/ARCHITECTURE.md), and [Security policy](SECURITY.md).
+
+## Development and verification
+
+Use a supported Node.js LTS release (CI uses Node 20):
+
+```bash
+npm ci
+npm run lint
+npm run typecheck
+npm test -- --runInBand
+npm run package
+npm run inspect:package
+npm run audit:prod
+```
+
+The current source tree contains only the release runtime and its focused tests. The abandoned hosted-platform, agent, MCP, browser, terminal, and mock-dashboard implementations were removed after productization and remain recoverable from Git history. The compiler and VSIX inspector still enforce explicit allowlists. See [Productization](docs/PRODUCTIZATION.md), [Testing](docs/TESTING.md), and [Releasing](docs/RELEASING.md).
+
+## Troubleshooting
+
+- **Cannot reach Ollama**: run `ollama serve`, verify the displayed origin, and choose Test. In SSH/Containers/Codespaces, remember the extension runs remotely.
+- **Model returns HTTP 404**: run `ollama list`, then Configure and select an installed model.
+- **No models installed**: run `ollama pull qwen2.5-coder:7b` (or another model), then Configure again.
+- **Context/edit button disabled**: grant Workspace Trust and open/select a regular workspace file.
+- **Edit is stale**: the buffer changed during generation. Review those changes and request a new proposal.
+- **Remote endpoint rejected**: use HTTPS and enable `samsarix.ollama.allowRemoteEndpoint` in User Settings only after reviewing the disclosure above.
+
+## License
+
+Samsarix is open-source software under the [Mozilla Public License 2.0](LICENSE). Distributed modifications to Samsarix-covered files remain available under MPL-2.0, while separate files in a larger work may use other terms. See [Licensing](LICENSING.md), [Attribution](NOTICE), and [Trademarks](TRADEMARKS.md).
+
+Copyright © 2024–2026 Samsarix LLC and contributors. General inquiries: [contact@samsarix.com](mailto:contact@samsarix.com). Support and private security reports: [support@samsarix.com](mailto:support@samsarix.com).

@@ -1,47 +1,15 @@
-# Contributing to Helix VS Code Extension
+# Contributing
 
-We welcome contributions! This is a community project built with passion.
+Samsarix accepts focused changes that preserve the local, explicit-context, review-before-apply product contract in [docs/PRODUCTIZATION.md](docs/PRODUCTIZATION.md).
 
-## Getting Started
+## Before opening a pull request
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Write tests for new functionality
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+1. Use Node 20 and start from a clean checkout.
+2. Run `npm ci`.
+3. Run `npm run check` and `npm run audit:prod`.
+4. Inspect the generated `.vsix.contents.txt` and verify the `.sha256` file.
+5. Manually test the affected journey in an Extension Development Host or from the packaged VSIX.
 
-## Development Setup
+Pull requests should include the behavior changed, data-flow/privacy impact, tests added, and manual verification performed. Never add telemetry, background source collection, automatic writes, shell/process execution, remote endpoints, auth, or new providers without an updated product plan and threat model.
 
-```bash
-npm install
-npm run compile
-npm run watch
-```
-
-## Testing
-
-```bash
-npm test
-npm run test:e2e
-```
-
-## Code Style
-
-- Follow ESLint configuration
-- Use TypeScript strict mode
-- Write JSDoc comments for public APIs
-- Keep components focused and testable
-
-## Reporting Issues
-
-Please use GitHub Issues to report bugs or suggest features.
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the same dual-license model (Apache 2.0 + Proprietary Commercial).
-
----
-
-Thank you for contributing to Helix VS Code Extension!
+Do not include tokens, `.env` files, prompts/source captured from users, generated model output, or proprietary test fixtures.

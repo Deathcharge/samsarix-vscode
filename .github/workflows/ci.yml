@@ -1,0 +1,57 @@
+name: Verify extension
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'codex/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Lint release source
+        run: npm run lint
+
+      - name: Compile strict release source
+        run: npm run compile
+
+      - name: Run unit and release-surface tests
+        run: npm test -- --runInBand
+
+      - name: Audit production dependency surface
+        run: npm run audit:prod
+
+      - name: Build VSIX
+        run: npm run package
+
+      - name: Inspect built VSIX
+        run: npm run inspect:package
+
+      - name: Upload verified package and evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: samsarix-vsix-${{ github.sha }}
+          path: |
+            dist/*.vsix
+            dist/*.sha256
+            dist/*.contents.txt
+          if-no-files-found: error
+          retention-days: 14

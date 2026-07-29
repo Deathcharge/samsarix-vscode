@@ -1,45 +1,21 @@
-# Dual Licensing Strategy
+# Licensing
 
-This project is available under two licenses:
+Samsarix is licensed under the [Mozilla Public License 2.0](LICENSE) (`MPL-2.0`). The license text is unmodified.
 
-1. **Apache License 2.0** - For open-source use (free)
-2. **Proprietary Commercial License** - For businesses ($99-999/year)
+Copyright © 2024–2026 Samsarix LLC and contributors.
 
-## Apache 2.0 (Open Source)
+## Why MPL-2.0
 
-Use this license if you:
-- Are building open-source software
-- Want to contribute to the community
-- Are using it internally
-- Don't need commercial support
-- Want to avoid licensing fees
+MPL-2.0 is a file-level copyleft license. It permits commercial use, modification, distribution, private use, and use inside larger works, while requiring distributed source versions of Samsarix-covered files and modifications to those files to remain available under MPL-2.0. License and copyright notices must be preserved, and contributors provide the patent grant described by the license.
 
-See [LICENSE](./LICENSE) for full terms.
+This is a better fit for a developer extension than the repository's former custom Business Source License text: it is a standard OSI-approved open-source license, has no fictional API-call threshold or pricing dependency, and protects improvements to the covered files without forcing unrelated files in a larger product under the same license.
 
-## Proprietary Commercial License
+MPL-2.0 does not grant rights to the Samsarix name, logo, or other brand assets except as needed to comply with attribution requirements. See [TRADEMARKS.md](TRADEMARKS.md).
 
-Use this license if you:
-- Are building commercial products
-- Want priority support
-- Need legal indemnification
-- Want to support the developer
+## Attribution and source availability
 
-**Pricing:**
-- Startup: $99/year (up to 5 deployments)
-- Professional: $499/year (up to 25 deployments)
-- Enterprise: Custom quote (unlimited)
+Distributions must include the MPL-2.0 license and preserve applicable notices. The packaged extension includes `LICENSE.txt`, `NOTICE`, and `TRADEMARKS.md`; the corresponding source is available from the repository URL embedded in its manifest.
 
-**Includes:**
-- Priority email support (best-effort)
-- Indemnification for unmodified software
-- Commercial use rights
-- Quarterly consulting calls (Professional+)
+Commercial licensing, support, or partnership questions may be sent to [contact@samsarix.com](mailto:contact@samsarix.com). Security reports should use [support@samsarix.com](mailto:support@samsarix.com) or GitHub's private security-advisory flow.
 
-**Important:** This is a solo project. Support is best-effort, not guaranteed SLAs. I'm one person building this as a passion project, so please set realistic expectations.
-
-For commercial licensing inquiries:
-📧 licensing@helixcollective.io
-
----
-
-See the main [helix-orchestration](https://github.com/Deathcharge/helix-orchestration) repository for complete licensing documentation.
+This document summarizes the intended project policy and is not legal advice. Samsarix LLC should have counsel confirm copyright assignments, trademark registrations, and publication terms before relying on them in a dispute.
