@@ -13,6 +13,7 @@ tests/**
 .vscodeignore
 CONTRIBUTING.md
 LICENSING.md
+ROADMAP.md
 SECURITY.md
 eslint.config.mjs
 jest.config.js
