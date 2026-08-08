@@ -20,7 +20,7 @@ const allowed = [
   /^extension\/(package\.json|readme\.md|changelog\.md|license(?:\.txt)?|notice|trademarks\.md|icon\.png)$/i,
   /^extension\/assets\/chat\.(css|js)$/,
   /^extension\/out\/extension\.js$/,
-  /^extension\/out\/local\/(ChatViewProvider|EditController|OllamaClient|PreviewProvider|configuration|policy)\.js$/,
+  /^extension\/out\/local\/(ChatViewProvider|diagnostics|EditController|OllamaClient|PreviewProvider|configuration|policy)\.js$/,
 ];
 const required = [
   'extension/package.json',
@@ -34,6 +34,7 @@ const required = [
   'extension/assets/chat.js',
   'extension/out/extension.js',
   'extension/out/local/OllamaClient.js',
+  'extension/out/local/diagnostics.js',
 ];
 const forbiddenRuntimeText = [
   'api.helixcollective.io',

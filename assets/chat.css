@@ -64,10 +64,17 @@ h1 {
 
 .configuration,
 .context-card,
+.task-actions,
 .composer {
   border: 1px solid var(--vscode-panel-border);
   border-radius: 6px;
   padding: 10px;
+}
+
+.task-actions {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 dl {

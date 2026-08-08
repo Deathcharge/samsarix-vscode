@@ -97,8 +97,9 @@ This is intentionally narrower than general agents. The goal is trustworthy comp
 
 ### P1 — high-value follow-up
 
-- Streaming responses with cancellation and back-pressure.
-- Multi-turn session history with an explicit clear button and documented in-memory retention.
+- **Completed:** streaming responses with cancellation and throttled webview updates.
+- **Completed:** multi-turn session history with an explicit clear button, 12-turn request bound, and documented in-memory retention.
+- **Completed:** explicit-selection Explain/Review tasks and on-demand active-file diagnostic repair through the existing diff gate.
 - Partial edit format with robust conflict handling instead of whole-file proposals.
 - First-party VS Code integration tests in an Extension Development Host.
 - Remote Ollama support with an authenticated transport design and per-endpoint disclosure.

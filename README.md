@@ -8,8 +8,10 @@ This repository is independent: it needs no Samsarix account, subscription, host
 
 ## What it does
 
-- Local Ollama chat with a visible endpoint and model.
+- Streamed, cancellable Ollama chat with a visible endpoint and model.
+- Memory-only multi-turn follow-ups with an explicit Clear chat action.
 - Optional editor-selection context with filename, line range, and size shown before Send.
+- One-click local explanation/review of a selection and diagnostics-aware repair.
 - One-file edit proposals for the active workspace file.
 - Native diff review, explicit Apply/Reject, stale-file protection, and session-scoped revert.
 - No activation network request, telemetry, passive completion, shell execution, or account.
@@ -58,6 +60,17 @@ The default endpoint is `http://127.0.0.1:11434`; the default model name is `qwe
 
 The attachment remains in memory until you clear it or the extension session ends. Samsarix sends no other file or workspace data.
 
+For a faster review loop, use **Explain selection** or **Review selection** in the panel/editor context menu. These actions attach the visible selection and send a fixed, inspectable task prompt. Follow-up messages include up to the last 12 in-memory conversation turns; **Clear chat** removes them immediately.
+
+## Repair active-file diagnostics
+
+1. Open a saved file with Problems reported by VS Code or a language extension.
+2. Choose **Repair diagnostics…** or run **Samsarix: Repair Active File Diagnostics…**.
+3. Samsarix sends up to 25 diagnostic summaries plus the bounded active file to Ollama.
+4. Review and explicitly apply or reject the native diff.
+
+This action is on-demand. Samsarix does not watch, scan, or automatically repair Problems, and it never suppresses checks by default.
+
 ## Propose a one-file edit
 
 1. Open a saved local file inside a trusted workspace.
@@ -77,6 +90,9 @@ Samsarix refuses edits when the workspace is untrusted, the target is untitled/n
 | Samsarix: Configure Ollama | Tests a user-entered origin and selects an installed model. |
 | Samsarix: Test Ollama Connection | Fetches `/api/tags` after the command is invoked. |
 | Samsarix: Add Editor Selection to Local Chat | Attaches only the current selection. |
+| Samsarix: Explain Editor Selection Locally | Attaches and explains the current selection. |
+| Samsarix: Review Editor Selection Locally | Attaches and reviews the selection for prioritized issues. |
+| Samsarix: Repair Active File Diagnostics… | Sends visible diagnostic summaries with the active file, then opens a reviewed diff. |
 | Samsarix: Propose Edit to Active File… | Generates one whole-file proposal and opens a diff. |
 | Samsarix: Revert Last Applied Edit | Restores the in-memory snapshot when it is still safe. |
 | Samsarix: Show Data & Privacy Details | Opens this document. |
@@ -98,7 +114,8 @@ All settings use machine/user scope; commands write global values. Workspace set
 Samsarix has no telemetry and no Samsarix-operated backend.
 
 - **Configure/Test** sends only `GET /api/tags` to the displayed endpoint.
-- **Send** sends the prompt and the displayed selection, if attached, to `/api/chat`.
+- **Send** streams the prompt, displayed selection (if attached), and up to 12 prior in-memory turns through `/api/chat`.
+- **Repair diagnostics** additionally sends up to 25 VS Code diagnostic summaries for the active file.
 - **Propose edit** sends the instruction, active file’s relative path/language, and bounded complete content to `/api/chat`.
 - Chat, attachment, and the last edit snapshot are memory-only. Settings persist through VS Code.
 - Prompt/source/model output is not logged.

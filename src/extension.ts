@@ -47,6 +47,15 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('samsarix.addSelection', () =>
       runCommand(() => chatProvider.addActiveSelection())
     ),
+    vscode.commands.registerCommand('samsarix.explainSelection', () =>
+      runCommand(() => chatProvider.runSelectionTask('explain'))
+    ),
+    vscode.commands.registerCommand('samsarix.reviewSelection', () =>
+      runCommand(() => chatProvider.runSelectionTask('review'))
+    ),
+    vscode.commands.registerCommand('samsarix.repairDiagnostics', () =>
+      runCommand(() => chatProvider.repairActiveDiagnostics())
+    ),
     vscode.commands.registerCommand('samsarix.runAgentEdit', () =>
       runCommand(async () => {
         const outcome = await editController.propose();

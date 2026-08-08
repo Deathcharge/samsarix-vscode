@@ -52,26 +52,27 @@ describe('OllamaClient', () => {
   });
 
   test('sends only the explicit question and attached context', async () => {
-    fetchMock.mockResolvedValue(
-      jsonResponse({ message: { content: 'A local answer' } })
-    );
+    fetchMock.mockResolvedValue(streamResponse(['A local ', 'answer']));
+    const chunks: string[] = [];
 
     const result = await new OllamaClient(configuration).chat('Why?', {
       label: 'src/example.ts:2-4',
       content: 'const value = 1;',
-    });
+    }, [{ role: 'assistant', content: 'Earlier answer' }], chunk => chunks.push(chunk));
 
     expect(result.value).toBe('A local answer');
+    expect(chunks).toEqual(['A local ', 'answer']);
     const [, init] = fetchMock.mock.calls[0];
     const body = JSON.parse(String(init?.body));
     expect(body).toMatchObject({
       model: 'qwen2.5-coder:7b',
-      stream: false,
+      stream: true,
     });
-    expect(body.messages).toHaveLength(2);
-    expect(body.messages[1].content).toContain('Why?');
-    expect(body.messages[1].content).toContain('src/example.ts:2-4');
-    expect(body.messages[1].content).toContain('const value = 1;');
+    expect(body.messages).toHaveLength(3);
+    expect(body.messages[1]).toEqual({ role: 'assistant', content: 'Earlier answer' });
+    expect(body.messages[2].content).toContain('Why?');
+    expect(body.messages[2].content).toContain('src/example.ts:2-4');
+    expect(body.messages[2].content).toContain('const value = 1;');
   });
 
   test('requests a path-free structured edit and validates it', async () => {
@@ -114,14 +115,14 @@ describe('OllamaClient', () => {
   });
 
   test('rejects malformed and empty model responses', async () => {
-    fetchMock.mockResolvedValueOnce(jsonResponse({ unexpected: true }));
+    fetchMock.mockResolvedValueOnce(
+      new Response(`${JSON.stringify({ unexpected: true })}\n`)
+    );
     await expect(new OllamaClient(configuration).chat('Hello')).rejects.toThrow(
-      /unexpected chat response/
+      /unexpected streaming response/
     );
 
-    fetchMock.mockResolvedValueOnce(
-      jsonResponse({ message: { content: '   ' } })
-    );
+    fetchMock.mockResolvedValueOnce(streamResponse(['   ']));
     await expect(new OllamaClient(configuration).chat('Hello')).rejects.toThrow(
       /empty response/
     );
@@ -153,6 +154,37 @@ describe('OllamaClient', () => {
     );
   });
 
+  test('normalizes cancellation while consuming a streaming body', async () => {
+    fetchMock.mockImplementation(async (_input, init) => {
+      const signal = init?.signal;
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue(
+              new TextEncoder().encode(
+                `${JSON.stringify({ message: { content: 'partial' } })}\n`
+              )
+            );
+            signal?.addEventListener('abort', () => {
+              controller.error(new DOMException('aborted', 'AbortError'));
+            });
+          },
+        })
+      );
+    });
+    const controller = new AbortController();
+    const request = new OllamaClient(configuration).chat(
+      'Hello',
+      undefined,
+      [],
+      undefined,
+      controller.signal
+    );
+    await Promise.resolve();
+    controller.abort();
+    await expect(request).rejects.toThrow(/request was cancelled/);
+  });
+
   test('rejects invalid configuration at construction time', () => {
     expect(
       () =>
@@ -169,4 +201,13 @@ function jsonResponse(value: unknown): Response {
     status: 200,
     headers: { 'content-type': 'application/json' },
   });
+}
+
+function streamResponse(chunks: string[]): Response {
+  return new Response(
+    chunks
+      .map(content => JSON.stringify({ message: { content }, done: false }))
+      .join('\n') + '\n',
+    { status: 200, headers: { 'content-type': 'application/x-ndjson' } }
+  );
 }

@@ -30,6 +30,13 @@ Current hardening backlog:
 - Remote endpoints have no first-party authentication design; whole-file proposals remain coarse and model-dependent.
 - The local IDE-assistant market is crowded, so the narrow safety promise needs user validation.
 
+Completed competitive workflow milestone:
+
+- Streamed, cancellable chat with bounded response parsing and throttled webview updates.
+- Up to 12 memory-only follow-up turns with an explicit clear action.
+- Explicit-selection Explain and Review tasks surfaced in the sidebar and editor context menu.
+- On-demand active-file diagnostic repair, bounded to 25 summaries and routed through native diff approval.
+
 ## Samsarix adoption
 
 - Define a public API, event, schema, artifact, or deployment contract before connecting to Samsarix Unified.

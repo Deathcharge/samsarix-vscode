@@ -43,6 +43,9 @@
     "onCommand:samsarix.configureOllama",
     "onCommand:samsarix.testConnection",
     "onCommand:samsarix.addSelection",
+    "onCommand:samsarix.explainSelection",
+    "onCommand:samsarix.reviewSelection",
+    "onCommand:samsarix.repairDiagnostics",
     "onCommand:samsarix.runAgentEdit",
     "onCommand:samsarix.revertLastEdit",
     "onCommand:samsarix.showPrivacy"
@@ -79,6 +82,21 @@
       {
         "command": "samsarix.addSelection",
         "title": "Add Editor Selection to Local Chat",
+        "category": "Samsarix"
+      },
+      {
+        "command": "samsarix.explainSelection",
+        "title": "Explain Editor Selection Locally",
+        "category": "Samsarix"
+      },
+      {
+        "command": "samsarix.reviewSelection",
+        "title": "Review Editor Selection Locally",
+        "category": "Samsarix"
+      },
+      {
+        "command": "samsarix.repairDiagnostics",
+        "title": "Repair Active File Diagnostics…",
         "category": "Samsarix"
       },
       {
@@ -130,14 +148,29 @@
       ],
       "editor/context": [
         {
-          "command": "samsarix.addSelection",
+          "command": "samsarix.explainSelection",
           "when": "editorHasSelection && isWorkspaceTrusted",
           "group": "samsarix@1"
         },
         {
+          "command": "samsarix.reviewSelection",
+          "when": "editorHasSelection && isWorkspaceTrusted",
+          "group": "samsarix@2"
+        },
+        {
+          "command": "samsarix.addSelection",
+          "when": "editorHasSelection && isWorkspaceTrusted",
+          "group": "samsarix@3"
+        },
+        {
+          "command": "samsarix.repairDiagnostics",
+          "when": "resourceScheme == file && isWorkspaceTrusted",
+          "group": "samsarix@4"
+        },
+        {
           "command": "samsarix.runAgentEdit",
           "when": "resourceScheme == file && isWorkspaceTrusted",
-          "group": "samsarix@2"
+          "group": "samsarix@5"
         }
       ]
     },

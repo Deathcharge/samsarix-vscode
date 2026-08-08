@@ -5,6 +5,10 @@ import { EditController } from './EditController';
 import { OllamaClient } from './OllamaClient';
 import { readLocalConfiguration } from './configuration';
 import {
+  createDiagnosticRepairInstruction,
+  summarizeDiagnostics,
+} from './diagnostics';
+import {
   MAX_QUESTION_CHARACTERS,
   assertBoundedText,
   isRecord,
@@ -37,6 +41,7 @@ export class ChatViewProvider
   private notice =
     'Samsarix makes no network request until you choose Test, Send, or Propose edit.';
   private activeAbort: AbortController | undefined;
+  private statePostTimer: ReturnType<typeof setTimeout> | undefined;
   private readonly disposables: vscode.Disposable[] = [];
 
   public constructor(
@@ -110,6 +115,36 @@ export class ChatViewProvider
     await vscode.commands.executeCommand(`${ChatViewProvider.viewType}.focus`);
   }
 
+  public async runSelectionTask(task: 'explain' | 'review'): Promise<void> {
+    await this.addActiveSelection();
+    const prompts = {
+      explain:
+        'Explain this selection in plain language. Describe its purpose, important control flow, assumptions, and one concrete example where useful.',
+      review:
+        'Review this selection for correctness, security, maintainability, and edge cases. Prioritize actionable findings and say explicitly if no material issue is visible.',
+    };
+    await this.send(prompts[task]);
+  }
+
+  public async repairActiveDiagnostics(): Promise<void> {
+    if (!vscode.workspace.isTrusted) {
+      throw new Error('Trust this workspace before repairing diagnostics.');
+    }
+    const editor = vscode.window.activeTextEditor;
+    if (!editor || editor.document.uri.scheme !== 'file') {
+      throw new Error('Open a workspace file with diagnostics to repair.');
+    }
+    const diagnostics = vscode.languages.getDiagnostics(editor.document.uri);
+    const summaries = summarizeDiagnostics(diagnostics);
+    const instruction = createDiagnosticRepairInstruction(
+      summaries,
+      diagnostics.length
+    );
+    this.notice = `Sending ${summaries.length} visible diagnostic${summaries.length === 1 ? '' : 's'} with the active file. A diff will open before any write.`;
+    await this.postState();
+    await this.proposeEdit(instruction);
+  }
+
   public async testConnection(): Promise<void> {
     if (this.busy) {
       throw new Error('Wait for the current Samsarix request to finish.');
@@ -148,6 +183,7 @@ export class ChatViewProvider
 
   public dispose(): void {
     this.activeAbort?.abort();
+    if (this.statePostTimer) clearTimeout(this.statePostTimer);
     this.messages = [];
     this.context = undefined;
     for (const disposable of this.disposables.splice(0)) {
@@ -173,6 +209,15 @@ export class ChatViewProvider
           return;
         case 'attachSelection':
           await this.addActiveSelection();
+          return;
+        case 'explainSelection':
+          await this.runSelectionTask('explain');
+          return;
+        case 'reviewSelection':
+          await this.runSelectionTask('review');
+          return;
+        case 'repairDiagnostics':
+          await this.repairActiveDiagnostics();
           return;
         case 'clearContext':
           this.context = undefined;
@@ -226,7 +271,13 @@ export class ChatViewProvider
 
     this.busy = true;
     this.notice = `Sending to ${readLocalConfiguration().endpoint}…`;
+    const history = this.messages.map(message => ({
+      role: message.role,
+      content: message.text,
+    }));
     this.messages.push({ role: 'user', text: question });
+    const streamingMessage: DisplayMessage = { role: 'assistant', text: '' };
+    this.messages.push(streamingMessage);
     this.messages = this.messages.slice(-20);
     this.activeAbort = new AbortController();
     await this.postState();
@@ -237,16 +288,23 @@ export class ChatViewProvider
         this.context
           ? { label: this.context.label, content: this.context.content }
           : undefined,
+        history,
+        chunk => {
+          streamingMessage.text += chunk;
+          this.scheduleStatePost();
+        },
         this.activeAbort.signal
       );
-      this.messages.push({
-        role: 'assistant',
-        text: result.value,
-        durationMs: result.durationMs,
-      });
+      streamingMessage.text = result.value;
+      streamingMessage.durationMs = result.durationMs;
       this.messages = this.messages.slice(-20);
       this.connection = 'connected';
       this.notice = `Completed locally in ${(result.durationMs / 1_000).toFixed(1)} seconds.`;
+    } catch (error) {
+      if (!streamingMessage.text) {
+        this.messages = this.messages.filter(message => message !== streamingMessage);
+      }
+      throw error;
     } finally {
       this.busy = false;
       this.activeAbort = undefined;
@@ -312,6 +370,14 @@ export class ChatViewProvider
     });
   }
 
+  private scheduleStatePost(): void {
+    if (this.statePostTimer) return;
+    this.statePostTimer = setTimeout(() => {
+      this.statePostTimer = undefined;
+      void this.postState();
+    }, 50);
+  }
+
   private createHtml(webview: vscode.Webview): string {
     const nonce = createNonce();
     const scriptUri = webview.asWebviewUri(
@@ -361,6 +427,15 @@ export class ChatViewProvider
   </section>
 
   <p id="notice" class="notice" role="status" aria-live="polite"></p>
+
+  <section class="task-actions" aria-label="Local review workflows">
+    <strong>Quick local workflows</strong>
+    <div class="button-row wrap">
+      <button id="explain" type="button">Explain selection</button>
+      <button id="review" type="button">Review selection</button>
+      <button id="repair" type="button">Repair diagnostics…</button>
+    </div>
+  </section>
 
   <section id="context-card" class="context-card" hidden>
     <div>
