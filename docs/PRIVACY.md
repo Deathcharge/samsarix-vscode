@@ -7,7 +7,8 @@ Samsarix does not operate a service, create accounts, collect telemetry, or pers
 | User action | Destination | Payload |
 | --- | --- | --- |
 | Configure or Test | Configured Ollama origin, `GET /api/tags` | No source code; normal HTTP request metadata only. |
-| Send | Configured Ollama origin, `POST /api/chat` | System instruction, typed question, and the one displayed selection if attached. |
+| Send / Explain / Review | Configured Ollama origin, `POST /api/chat` | System instruction, typed or fixed task question, the one displayed selection if attached, and up to 12 prior in-memory conversation turns. |
+| Repair diagnostics | Configured Ollama origin, `POST /api/chat` | Fixed repair instruction, up to 25 active-file diagnostic summaries, active file relative path/language, and bounded complete content. |
 | Propose edit | Configured Ollama origin, `POST /api/chat` | System instruction, typed edit instruction, active file relative path/language, and bounded complete active-file content. |
 | Apply/Revert | VS Code extension host only | In-memory before/after buffers and one `WorkspaceEdit`; no network action. |
 

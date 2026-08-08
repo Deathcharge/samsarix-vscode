@@ -1,12 +1,13 @@
 # Architecture
 
-Samsarix has one runtime entrypoint and six local modules. The TypeScript compiler and VSIX inspector use explicit allowlists, so an unrelated file cannot become executable or enter the package merely by being added to the repository.
+Samsarix has one runtime entrypoint and seven local modules. The TypeScript compiler and VSIX inspector use explicit allowlists, so an unrelated file cannot become executable or enter the package merely by being added to the repository.
 
 ```text
 extension.ts
   ├─ ChatViewProvider ── explicit action ── OllamaClient ── /api/tags or /api/chat
   ├─ EditController ── PreviewProvider ── native vscode.diff ── WorkspaceEdit
   ├─ configuration ── global/machine settings only
+  ├─ diagnostics ── bounded Problems summaries and repair instructions
   └─ policy ── endpoint, input, path, response, and edit validation
 ```
 
@@ -16,7 +17,9 @@ Activation constructs providers and registers commands, a webview view, a virtua
 
 ## Chat
 
-`ChatViewProvider` owns memory-only display messages and one optional selection snapshot. The webview posts an enumerated action with a bounded string. Dynamic values render through DOM `textContent`; its only packaged assets are `assets/chat.js` and `assets/chat.css`. The host calls `OllamaClient` only for Test, Send, or Propose edit.
+`ChatViewProvider` owns memory-only display messages and one optional selection snapshot. The webview posts an enumerated action with a bounded string. Dynamic values render through DOM `textContent`; its only packaged assets are `assets/chat.js` and `assets/chat.css`. Chat streams bounded NDJSON into one assistant message, throttling webview state updates to avoid per-token message pressure. Cancellation and the request timeout remain active until the response body is consumed.
+
+Explain and Review attach only the current selection and use fixed task prompts. Repair reads Problems for only the active file after an explicit action, bounds them to 25 summaries, and delegates to the same diff-first one-file edit path.
 
 ## Edits
 

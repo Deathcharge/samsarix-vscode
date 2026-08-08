@@ -14,6 +14,9 @@
     configure: document.getElementById('configure'),
     test: document.getElementById('test'),
     attach: document.getElementById('attach'),
+    explain: document.getElementById('explain'),
+    review: document.getElementById('review'),
+    repair: document.getElementById('repair'),
     clearContext: document.getElementById('clear-context'),
     clearChat: document.getElementById('clear-chat'),
     send: document.getElementById('send'),
@@ -32,6 +35,9 @@
   elements.configure.addEventListener('click', () => post('configure'));
   elements.test.addEventListener('click', () => post('test'));
   elements.attach.addEventListener('click', () => post('attachSelection'));
+  elements.explain.addEventListener('click', () => post('explainSelection'));
+  elements.review.addEventListener('click', () => post('reviewSelection'));
+  elements.repair.addEventListener('click', () => post('repairDiagnostics'));
   elements.clearContext.addEventListener('click', () => post('clearContext'));
   elements.clearChat.addEventListener('click', () => post('clearChat'));
   elements.send.addEventListener('click', () => submit('send'));
@@ -86,6 +92,9 @@
     elements.test.disabled = busy;
     elements.configure.disabled = busy;
     elements.attach.disabled = busy || !state.trusted;
+    elements.explain.disabled = busy || !state.trusted;
+    elements.review.disabled = busy || !state.trusted;
+    elements.repair.disabled = busy || !state.trusted;
     elements.clearContext.disabled = busy;
     elements.clearChat.disabled = busy;
     elements.prompt.disabled = busy;
