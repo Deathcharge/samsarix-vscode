@@ -7,7 +7,7 @@ This roadmap separates four gates: merge, release, publication, and flagship ado
 Portfolio role: **integration or extension**. Keep its platform-specific packaging and release lifecycle separate. Any flagship integration should use a documented HTTP, event, or package contract with explicit auth, privacy, and failure ownership.
 Planned repository identity: `Deathcharge/samsarix-vscode` (ready).
 
-Current disposition: Merge the productization branch after exact-head verification and rollback-ref creation; release and adoption remain separate decisions.
+Current disposition: the productized runtime and competitive local-review milestone are on `main`. Version `1.1.0` is the first non-colliding Samsarix release line because the historical `v1.0.0` tag predates productization. Marketplace publication and broader adoption remain separate owner decisions.
 
 ## Stabilize the productized default
 
@@ -24,9 +24,9 @@ Current disposition: Merge the productization branch after exact-head verificati
 
 Current hardening backlog:
 
-- No clean-profile, real-Ollama, Extension Development Host acceptance evidence from this audit.
-- No Marketplace publisher validation, pre-release, publication automation, or rollback exercise.
-- The branch has no cached product PR and changes licensing from a custom BSL baseline to MPL-2.0.
+- No real-Ollama acceptance evidence is available on this machine because Ollama is not installed.
+- No Marketplace publisher validation, Marketplace publication automation, or rollback exercise.
+- Marketplace publisher control and brand/trademark clearance still require owner evidence.
 - Remote endpoints have no first-party authentication design; whole-file proposals remain coarse and model-dependent.
 - The local IDE-assistant market is crowded, so the narrow safety promise needs user validation.
 
@@ -36,6 +36,8 @@ Completed competitive workflow milestone:
 - Up to 12 memory-only follow-up turns with an explicit clear action.
 - Explicit-selection Explain and Review tasks surfaced in the sidebar and editor context menu.
 - On-demand active-file diagnostic repair, bounded to 25 summaries and routed through native diff approval.
+- Extension Development Host smoke coverage at VS Code 1.85.2 verifies command registration, no-I/O activation, explicit selection attachment, and restricted configuration declarations.
+- Current stable VS Code compatibility is exercised in the CI host-test matrix, and the exact VSIX is installable in an isolated extension directory.
 
 ## Samsarix adoption
 

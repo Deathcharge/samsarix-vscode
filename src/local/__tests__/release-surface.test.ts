@@ -49,6 +49,7 @@ describe('release surface security invariants', () => {
     );
 
     expect(manifest.name).toBe('samsarix-vscode');
+    expect(manifest.version).toBe('1.1.0');
     expect(manifest.publisher).toBe('samsarix');
     expect(manifest.license).toBe('MPL-2.0');
     expect(manifest.author).toEqual({
@@ -66,6 +67,15 @@ describe('release surface security invariants', () => {
         key.startsWith('samsarix.')
       )
     ).toBe(true);
+  });
+
+  test('release package filename matches the manifest version', () => {
+    const manifest = JSON.parse(
+      readFileSync(path.join(workspace, 'package.json'), 'utf8')
+    );
+    expect(manifest.scripts.package).toContain(
+      `samsarix-vscode-${manifest.version}.vsix`
+    );
   });
 
   test('release entrypoint contains no hosted-service or process execution path', () => {

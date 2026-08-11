@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 — unreleased productization candidate
+## 1.1.0 — 2026-08-11 productized release candidate
 
 - Reframed Samsarix as an independent local-Ollama, review-first code assistant.
 - Removed hosted API, authentication, subscription, marketplace, agent polling, WebSocket, MCP, browser, terminal, mock dashboard, and passive inline-completion surfaces from the release runtime.
@@ -11,5 +11,11 @@
 - Renamed the product and extension identity to Samsarix, owned by Samsarix LLC.
 - Replaced the legacy double-helix icon with an original Samsarix S/X mark.
 - Replaced contradictory custom licensing terms with the standard Mozilla Public License 2.0, attribution notice, and trademark policy.
+- Added an automated Extension Development Host smoke test against the minimum supported VS Code version.
+- Added tag-driven draft GitHub release automation with verified VSIX evidence.
+
+## 1.0.0 — historical repository tag
+
+The existing `v1.0.0` tag predates the productized local-only runtime and is retained to avoid rewriting public history. Use `1.1.0` or later for the Samsarix-branded release line.
 
 Marketplace publication remains gated on control of the `samsarix` publisher, brand clearance, and the documented human acceptance run.

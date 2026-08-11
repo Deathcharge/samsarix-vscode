@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - 'codex/**'
+      - "codex/**"
   workflow_dispatch:
 
 permissions:
@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install locked dependencies
@@ -55,3 +55,27 @@ jobs:
             dist/*.contents.txt
           if-no-files-found: error
           retention-days: 14
+
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        vscode-version: ["1.85.2", "stable"]
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run Extension Development Host smoke test
+        run: xvfb-run -a npm run test:integration
+        env:
+          SAMSARIX_VSCODE_TEST_VERSION: ${{ matrix.vscode-version }}

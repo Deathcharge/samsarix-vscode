@@ -92,6 +92,7 @@ const packageJsonEntry = entries.find(entry => entry.name === 'extension/package
 const manifest = JSON.parse(packageJsonEntry.content.toString('utf8'));
 if (
   manifest.name !== 'samsarix-vscode' ||
+  manifest.version !== '1.1.0' ||
   manifest.publisher !== 'samsarix' ||
   manifest.license !== 'MPL-2.0' ||
   manifest.author?.name !== 'Samsarix LLC' ||

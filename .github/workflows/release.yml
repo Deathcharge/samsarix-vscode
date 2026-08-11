@@ -1,0 +1,49 @@
+name: Draft GitHub release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Verify minimum supported VS Code host
+        run: xvfb-run -a npm run test:integration
+        env:
+          SAMSARIX_VSCODE_TEST_VERSION: "1.85.2"
+
+      - name: Verify source and package
+        run: npm run check
+
+      - name: Audit complete dependency graph
+        run: npm audit --audit-level=high
+
+      - name: Create draft release with immutable evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          dist/*.vsix
+          dist/*.sha256
+          dist/*.contents.txt
+          --draft
+          --verify-tag
+          --generate-notes
+          --title "Samsarix ${GITHUB_REF_NAME}"

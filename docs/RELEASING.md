@@ -5,11 +5,12 @@ Public publication is not authorized by repository access alone. Confirm every e
 ## Technical gates
 
 1. Start from a clean checkout on a protected release branch.
-2. Use Node 20 and run `npm ci`.
-3. Run `npm run check` and `npm run audit:prod`.
+2. Use Node 22 or later and run `npm ci`.
+3. Run `npm run check`, `npm audit --audit-level=high`, and `npm run audit:prod`.
 4. Build twice from the same checkout and confirm the normalized VSIX SHA-256 is identical. Retain the VSIX, `.sha256`, `.contents.txt`, test output, dependency-audit output, and source revision.
-5. Have a second person install that exact VSIX in a clean VS Code profile and sign off on [the manual matrix](TESTING.md#manual-core-journey-matrix).
-6. Verify README/settings/commands against the installed artifact.
+5. Run `npm run test:integration` and retain the Extension Development Host result.
+6. Have a second person install that exact VSIX in a clean VS Code profile with Ollama and sign off on [the manual matrix](TESTING.md#manual-core-journey-matrix).
+7. Verify README/settings/commands against the installed artifact.
 
 ## Publication
 

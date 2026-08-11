@@ -2,7 +2,7 @@
 
 Status: verified release candidate; Marketplace publication externally gated
 Date: 2026-07-28  
-Release target: `1.0.0` only after every P0 gate below passes
+Release target: `1.1.0`; the historical `v1.0.0` tag predates the productized runtime and remains unchanged
 
 ## Executive decision
 
@@ -101,7 +101,7 @@ This is intentionally narrower than general agents. The goal is trustworthy comp
 - **Completed:** multi-turn session history with an explicit clear button, 12-turn request bound, and documented in-memory retention.
 - **Completed:** explicit-selection Explain/Review tasks and on-demand active-file diagnostic repair through the existing diff gate.
 - Partial edit format with robust conflict handling instead of whole-file proposals.
-- First-party VS Code integration tests in an Extension Development Host.
+- **Completed:** first-party smoke tests in a VS Code 1.85.2 Extension Development Host.
 - Remote Ollama support with an authenticated transport design and per-endpoint disclosure.
 - Accessibility and localization review with keyboard-only and screen-reader testing.
 
@@ -254,9 +254,9 @@ The official `vsce` flow is the release mechanism. VS Code’s current guidance 
 
 The release is blocked unless:
 
-- `npm ci`, `npm run lint`, `npm run compile`, `npm test -- --runInBand`, and `npm run package` succeed from a clean checkout;
+- `npm ci`, `npm run lint`, `npm run compile`, `npm test -- --runInBand`, `npm run test:integration`, and `npm run package` succeed from a clean checkout;
 - the VSIX contents match the allowlist and contain no source maps, test fixtures, stale webviews, lockfile secrets, `.env` files, or unrelated services;
-- `npm audit --omit=dev` has no high/critical production finding, and dev-only exceptions (if any) are recorded with owner and expiry;
+- both the complete `npm audit` and production-only audit have no high/critical finding; any future exception must record an owner and expiry;
 - the installed VSIX passes the manual core journey;
 - the MPL-2.0 license/notice files are present and the intended Marketplace publisher identity is controlled by the owner.
 
@@ -277,7 +277,7 @@ The legacy double-helix icon was replaced with a new project-created S/X mark th
 
 Public Marketplace publication remains blocked by:
 
-- **Publisher**: create or confirm control of the exact `samsarix` Visual Studio Marketplace publisher declared by the manifest.
+- **Publisher**: create or confirm control of the exact `samsarix` Visual Studio Marketplace publisher declared by the manifest. As checked on 2026-08-11, the public publisher and `samsarix.samsarix-vscode` item URLs both return 404, and this workstation has no authenticated `vsce` publisher.
 - **Repository identity (complete)**: the canonical repository and manifest URLs use `Deathcharge/samsarix-vscode`; the post-rename VSIX contents check passes.
 - **Brand clearance**: perform a professional trademark search for the Samsarix name and the new S/X mark, document provenance, and decide whether to pursue registration before a broad public launch.
 - **Copyright chain**: confirm that Samsarix LLC owns or has assignments for the copyrights it claims. Repository history is overwhelmingly owner-authored but includes automation identities.

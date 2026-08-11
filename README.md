@@ -4,7 +4,7 @@ Samsarix is a small VS Code coding companion for developers who run [Ollama](htt
 
 This repository is independent: it needs no Samsarix account, subscription, hosted API, marketplace, or companion repository.
 
-> Release status: this is a verified release candidate. Public Marketplace publication still requires control of the `samsarix` publisher, brand/trademark clearance, and a human acceptance run with a chat-capable Ollama model. See [the productization record](docs/PRODUCTIZATION.md#owner-decisions-and-external-gates).
+> Release status: `1.1.0` is the first productized release candidate. It has automated unit, package, and Extension Development Host evidence. Public Marketplace publication still requires control of the `samsarix` publisher, brand/trademark clearance, and a human acceptance run with a chat-capable Ollama model. See [the productization record](docs/PRODUCTIZATION.md#owner-decisions-and-external-gates).
 
 ## What it does
 
@@ -37,7 +37,7 @@ From a clean checkout:
 ```bash
 npm ci
 npm run check
-code --install-extension dist/samsarix-vscode-1.0.0.vsix
+code --install-extension dist/samsarix-vscode-1.1.0.vsix
 ```
 
 `npm run check` lints, type-checks, tests, packages, normalizes the archive for reproducible hashing, inspects every VSIX entry against an allowlist, and writes adjacent `.sha256` and `.contents.txt` evidence files.
@@ -128,13 +128,14 @@ See [Privacy](docs/PRIVACY.md), [Architecture](docs/ARCHITECTURE.md), and [Secur
 
 ## Development and verification
 
-Use a supported Node.js LTS release (CI uses Node 20):
+Use Node.js 22 or later (CI uses Node 22):
 
 ```bash
 npm ci
 npm run lint
 npm run typecheck
 npm test -- --runInBand
+npm run test:integration
 npm run package
 npm run inspect:package
 npm run audit:prod
