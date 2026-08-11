@@ -11,7 +11,7 @@ Install a locally verified package:
 ```bash
 npm ci
 npm run check
-code --install-extension dist/samsarix-vscode-1.0.0.vsix
+code --install-extension dist/samsarix-vscode-1.1.0.vsix
 ```
 
 Open **Samsarix: Open Local Chat**, choose **Configure**, confirm the Ollama origin, and select an installed model. No network request happens before a Configure, Test, Send, or Propose-edit action.

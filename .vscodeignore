@@ -4,10 +4,12 @@
 coverage/**
 dist/**
 docs/**
+integration-fixture/**
 media/**
 node_modules/**
 scripts/**
 src/**
+out/integration/**
 tests/**
 .gitignore
 .vscodeignore
@@ -19,6 +21,7 @@ eslint.config.mjs
 jest.config.js
 package-lock.json
 tsconfig.json
+tsconfig.integration.json
 **/*.map
 **/*.ts
 **/*.tsx
