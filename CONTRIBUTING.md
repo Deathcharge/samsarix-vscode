@@ -4,7 +4,7 @@ Samsarix accepts focused changes that preserve the local, explicit-context, revi
 
 ## Before opening a pull request
 
-1. Use Node 20 and start from a clean checkout.
+1. Use Node 22 or later and start from a clean checkout.
 2. Run `npm ci`.
 3. Run `npm run check` and `npm run audit:prod`.
 4. Inspect the generated `.vsix.contents.txt` and verify the `.sha256` file.

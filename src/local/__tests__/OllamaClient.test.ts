@@ -148,13 +148,18 @@ describe('OllamaClient', () => {
   });
 
   test('normalizes network errors into an actionable message', async () => {
-    fetchMock.mockRejectedValue(new TypeError('fetch failed'));
-    await expect(new OllamaClient(configuration).chat('Hello')).rejects.toThrow(
-      /Cannot reach Ollama/
-    );
+    const networkError = new TypeError('fetch failed');
+    fetchMock.mockRejectedValue(networkError);
+    await expect(
+      new OllamaClient(configuration).chat('Hello')
+    ).rejects.toMatchObject({
+      message: expect.stringMatching(/Cannot reach Ollama/),
+      cause: networkError,
+    });
   });
 
   test('normalizes cancellation while consuming a streaming body', async () => {
+    const streamError = new DOMException('aborted', 'AbortError');
     fetchMock.mockImplementation(async (_input, init) => {
       const signal = init?.signal;
       return new Response(
@@ -166,7 +171,7 @@ describe('OllamaClient', () => {
               )
             );
             signal?.addEventListener('abort', () => {
-              controller.error(new DOMException('aborted', 'AbortError'));
+              controller.error(streamError);
             });
           },
         })
@@ -182,7 +187,10 @@ describe('OllamaClient', () => {
     );
     await Promise.resolve();
     controller.abort();
-    await expect(request).rejects.toThrow(/request was cancelled/);
+    await expect(request).rejects.toMatchObject({
+      message: expect.stringMatching(/request was cancelled/),
+      cause: streamError,
+    });
   });
 
   test('rejects invalid configuration at construction time', () => {
