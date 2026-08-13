@@ -150,7 +150,7 @@ export class OllamaClient {
       if (buffer.trim()) content += parseStreamLine(buffer, onChunk);
     } catch (error) {
       const abortMessage = lease.abortMessage();
-      if (abortMessage) throw new Error(abortMessage);
+      if (abortMessage) throw new Error(abortMessage, { cause: error });
       throw error;
     } finally {
       reader.releaseLock();
@@ -255,7 +255,7 @@ export class OllamaClient {
       }
     } catch (error) {
       const abortMessage = lease.abortMessage();
-      if (abortMessage) throw new Error(abortMessage);
+      if (abortMessage) throw new Error(abortMessage, { cause: error });
       throw error;
     } finally {
       lease.dispose();
@@ -308,15 +308,19 @@ export class OllamaClient {
     } catch (error) {
       if (controller.signal.aborted) {
         if (parentSignal?.aborted) {
-          throw new Error('The Ollama request was cancelled.');
+          throw new Error('The Ollama request was cancelled.', {
+            cause: error,
+          });
         }
         throw new Error(
-          `Ollama did not respond within ${Math.round(this.configuration.timeoutMs / 1000)} seconds.`
+          `Ollama did not respond within ${Math.round(this.configuration.timeoutMs / 1000)} seconds.`,
+          { cause: error }
         );
       }
       if (error instanceof TypeError) {
         throw new Error(
-          `Cannot reach Ollama at ${this.endpoint}. Start Ollama, then use “Samsarix: Test Ollama Connection”.`
+          `Cannot reach Ollama at ${this.endpoint}. Start Ollama, then use “Samsarix: Test Ollama Connection”.`,
+          { cause: error }
         );
       }
       throw error;
