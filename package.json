@@ -240,12 +240,12 @@
     "@typescript-eslint/parser": "8.67.0",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^3.9.2",
-    "eslint": "10.8.1",
+    "eslint": "10.9.1",
     "globals": "^16.0.0",
     "jest": "^30.4.2",
     "ts-jest": "29.4.12",
     "typescript": "^5.3.3",
-    "typescript-eslint": "8.67.0",
+    "typescript-eslint": "8.68.0",
     "yauzl": "^3.4.0",
     "yazl": "^3.3.1"
   }
